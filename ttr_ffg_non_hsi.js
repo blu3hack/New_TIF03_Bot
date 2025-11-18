@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-// const pool = require('./connection');
+const pool = require('./connection');
 const { user, pass } = require('./login');
 const fs = require('fs');
 const { periode_long_format, enddate_long_format, periode_end_format } = require('./currentDate');
@@ -23,9 +23,10 @@ const { exec } = require('child_process');
     // mbil cpacha dari database
     function getData() {
       return new Promise((resolve, reject) => {
-        exec('python otp_newexpro.py', (error, stdout, stderr) => {
-          if (error || stderr) return reject(error || stderr);
-          resolve(stdout.trim());
+        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
+        pool.query(query, (err, results) => {
+          if (err) return reject(err);
+          resolve(results);
         });
       });
     }
@@ -35,7 +36,7 @@ const { exec } = require('child_process');
     await page.type('#username', user);
     await page.type('#password', pass);
 
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(20000);
     const result = await getData();
     const pesan = result[0].pesan; // contoh: "cpt azp"
     const parts = pesan.split(' ');
@@ -50,17 +51,37 @@ const { exec } = require('child_process');
     }
 
     await Promise.all([page.waitForNavigation({ waitUntil: 'networkidle0' }), page.click('form button[type="submit"]')]);
-    // console.log('Masukkan OTP secara Manual dan tunggu sebentar');
+    console.log('Masukkan OTP secara Manual dan tunggu sebentar');
+
+    // ================== INPUT OTP =====================
+    async function getCaptchaFromPython() {
+      return new Promise((resolve, reject) => {
+        exec('python otp_newexpro.py', (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Terjadi kesalahan: ${error.message}`);
+            return reject(error);
+          }
+          if (stderr) {
+            console.error(`Stderr: ${stderr}`);
+            return reject(stderr);
+          }
+
+          const otp = stdout.trim();
+          console.log(`OTP dari Python: ${otp}`); // Pastikan OTP valid di sini
+          resolve(otp);
+        });
+      });
+    }
 
     // input otp secara manual
     await page.waitForTimeout(10000);
     async function insertOTP() {
-      const result = await getData();
-      const pesan = result[0].pesan; // contoh: "cpt azp"
-      const parts = pesan.split(' ');
-      const captcha = parts[1] || null; // ambil kata setelah "cpt"
-      console.log(captcha);
-      const code_otp = await captcha;
+      const result = await getCaptchaFromPython();
+      // const pesan = result[0].pesan; // contoh: "cpt azp"
+      // const parts = pesan.split(' ');
+      // const captcha = parts[1] || null; // ambil kata setelah "cpt"
+      console.log(result);
+      const code_otp = result;
       const code1 = Math.floor(code_otp / 100000) % 10;
       const code2 = Math.floor(code_otp / 10000) % 10;
       const code3 = Math.floor(code_otp / 1000) % 10;
@@ -135,6 +156,7 @@ const { exec } = require('child_process');
           }
         }
         // pilih tanggal
+        // console.log(result);
 
         async function selectdate(selectorDate, result) {
           const inputSelector = selectorDate; // Ganti dengan selector elemen input Anda
@@ -339,10 +361,10 @@ const { exec } = require('child_process');
           }
         }
         // pilih tanggal
-        const result = periode_long_format;
+        // const result = periode_long_format;
         // console.log(result);
 
-        async function selectdate(selectorDate) {
+        async function selectdate(selectorDate, result) {
           const inputSelector = selectorDate; // Ganti dengan selector elemen input Anda
           await page.waitForSelector(inputSelector);
 
@@ -362,8 +384,8 @@ const { exec } = require('child_process');
           );
         }
 
-        await selectdate('#orderdate');
-        await selectdate('#provcomp');
+        await selectdate('#orderdate', periode_long_format);
+        await selectdate('#provcomp', periode_end_format);
 
         await page.waitForTimeout(3000);
         await Promise.all([page.waitForNavigation({ waitUntil: 'networkidle0' }), page.click('#filter_data > div > div[class~="w-[100px]"] > div > div > a')]);
@@ -493,10 +515,10 @@ const { exec } = require('child_process');
     }
 
     // running FUnction
-    await ttdc_non_hsi();
+    // await ttdc_non_hsi();
     // await ffg_non_hsi();
     // await provcomp();
-    // await unspec_warranty();
+    await unspec_warranty();
   } catch (err) {
     console.error('Ada kesalahan:', err.message);
   } finally {

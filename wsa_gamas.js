@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const csv = require('csv-parser');
 const { secureHeapUsed } = require('crypto');
-const { user_care, pass_care } = require('./login');
+const { user_aribi, pass_aribi } = require('./login');
 const { exec } = require('child_process');
 const axios = require('axios');
 const sharp = require('sharp');
@@ -19,8 +19,8 @@ const { periode_long_format } = require('./currentDate');
   await page.goto('https://nonatero.telkom.co.id/wsa/index.php/login');
 
   // Isi formulir login
-  await page.type('[placeholder="Enter your Nik or username"]', user_care);
-  await page.type('[placeholder="············"]', pass_care);
+  await page.type('[placeholder="Enter your Nik or username"]', user_aribi);
+  await page.type('[placeholder="············"]', pass_aribi);
   page.$x("//a[contains(., 'Wallboard')]");
 
   // klik chec box
@@ -40,7 +40,7 @@ const { periode_long_format } = require('./currentDate');
   // ================== INPUT OTP =====================
   async function getCaptchaFromDatabase() {
     return new Promise((resolve, reject) => {
-      exec('python otp.py', (error, stdout, stderr) => {
+      exec('python otp_840168.py', (error, stdout, stderr) => {
         if (error) {
           console.error(`Terjadi kesalahan: ${error.message}`);
           return reject(error);
@@ -567,17 +567,18 @@ const { periode_long_format } = require('./currentDate');
       await sub_ttr(2, 4, 4, 'jatim');
     }
 
-    // await jenis_ttr(1, 'ttr3');
+    await jenis_ttr(1, 'ttr3');
     await jenis_ttr(2, 'ttr6');
     await jenis_ttr(4, 'ttr36');
     await jenis_ttr(5, 'ttrmanja');
   }
 
   // Proses DOwnload Data
+
   // await SegmenAkses();
-  // await AsrGuarantee();
-  // await ServAvailability();
-  await ttr();
+  // await ttr();
+  await AsrGuarantee();
+  await ServAvailability();
 
   async function tombol() {
     const [button] = await page.$x("//button[contains(., 'Filter')]");
