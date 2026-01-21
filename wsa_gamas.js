@@ -231,7 +231,7 @@ const { periode_long_format } = require('./currentDate');
     async function sugar_assurance(company, regional, witel, nama_file) {
       // pilih tahun periode
       const periode_selector = '#periodeValue';
-      const option_periode_Selector = '#periodeValue > option:nth-child(1)';
+      const option_periode_Selector = '#periodeValue > option:nth-child(2)';
       await page.waitForSelector(periode_selector);
       await page.evaluate(
         (periode_selector, option_periode_Selector) => {
@@ -324,10 +324,16 @@ const { periode_long_format } = require('./currentDate');
     await sugar_assurance(3, 6, 1, 'sugar_tr5');
     await sugar_assurance(3, 7, 1, 'sugar_tr6');
     await sugar_assurance(3, 8, 1, 'sugar_tr7');
+
     await sugar_assurance(2, 4, 1, 'sugar_area');
     await sugar_assurance(2, 4, 2, 'sugar_balnus');
     await sugar_assurance(2, 4, 3, 'sugar_jateng');
     await sugar_assurance(2, 4, 4, 'sugar_jatim');
+
+    await sugar_assurance(1, 4, 1, 'sugar_area_ccm');
+    await sugar_assurance(1, 4, 2, 'sugar_balnus_ccm');
+    await sugar_assurance(1, 4, 3, 'sugar_jateng_ccm');
+    await sugar_assurance(1, 4, 4, 'sugar_jatim_ccm');
   }
 
   // =============
@@ -340,7 +346,7 @@ const { periode_long_format } = require('./currentDate');
     async function ser_avail(company, regional, witel, nama_file) {
       // pilih tahun periode
       const periode_selector = '#periodeValue';
-      const option_periode_Selector = '#periodeValue > option:nth-child(1)';
+      const option_periode_Selector = '#periodeValue > option:nth-child(2)';
       await page.waitForSelector(periode_selector);
       await page.evaluate(
         (periode_selector, option_periode_Selector) => {
@@ -440,6 +446,11 @@ const { periode_long_format } = require('./currentDate');
     await ser_avail(2, 4, 2, 'service_balnus');
     await ser_avail(2, 4, 3, 'service_jateng');
     await ser_avail(2, 4, 4, 'service_jatim');
+
+    await ser_avail(1, 4, 1, 'service_area_ccm');
+    await ser_avail(1, 4, 2, 'service_balnus_ccm');
+    await ser_avail(1, 4, 3, 'service_jateng_ccm');
+    await ser_avail(1, 4, 4, 'service_jatim_ccm');
   }
   //  ================ TTR ===============
 
@@ -468,7 +479,7 @@ const { periode_long_format } = require('./currentDate');
       async function sub_ttr(company, regional, witel, nama_file) {
         // pilih tahun periode
         const periode_selector = '#periodeValue';
-        const option_periode_Selector = '#periodeValue > option:nth-child(1)';
+        const option_periode_Selector = '#periodeValue > option:nth-child(2)';
         await page.waitForSelector(periode_selector);
         await page.evaluate(
           (periode_selector, option_periode_Selector) => {
@@ -565,6 +576,11 @@ const { periode_long_format } = require('./currentDate');
       await sub_ttr(2, 4, 2, 'balnus');
       await sub_ttr(2, 4, 3, 'jateng');
       await sub_ttr(2, 4, 4, 'jatim');
+
+      await sub_ttr(1, 4, 1, 'area_ccm');
+      await sub_ttr(1, 4, 2, 'balnus_ccm');
+      await sub_ttr(1, 4, 3, 'jateng_ccm');
+      await sub_ttr(1, 4, 4, 'jatim_ccm');
     }
 
     await jenis_ttr(1, 'ttr3');
@@ -574,9 +590,8 @@ const { periode_long_format } = require('./currentDate');
   }
 
   // Proses DOwnload Data
-
+  await ttr();
   // await SegmenAkses();
-  // await ttr();
   await AsrGuarantee();
   await ServAvailability();
 

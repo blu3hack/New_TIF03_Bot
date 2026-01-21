@@ -515,9 +515,9 @@ const { exec } = require('child_process');
     }
 
     // running FUnction
-    // await ttdc_non_hsi();
-    // await ffg_non_hsi();
-    // await provcomp();
+    await ttdc_non_hsi();
+    await ffg_non_hsi();
+    await provcomp();
     await unspec_warranty();
   } catch (err) {
     console.error('Ada kesalahan:', err.message);

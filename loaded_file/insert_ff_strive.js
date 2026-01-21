@@ -1,10 +1,10 @@
 const mysql = require('mysql2');
 const connection = require('./connection');
-const { maxDate } = require('../currentDate');
+const { MaxDate } = require('../currentDate');
 
 // Tabel yang akan dihapus terlebih dahulu
 const tableForDelete = ['ff_strive'];
-const currentDate = maxDate;
+const currentDate = MaxDate;
 
 async function deleteData() {
   return new Promise((resolve, reject) => {
@@ -77,5 +77,4 @@ async function main() {
     connection.end(); // Tutup koneksi setelah semua proses selesai
   }
 }
-
 main();

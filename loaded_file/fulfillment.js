@@ -52,13 +52,13 @@ function fulfillment_hsi_reg() {
   ];
 
   // Buat bagian WHERE dengan NOT LIKE untuk setiap kata
-  const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
-  const sql = `DELETE FROM kpi_msa_2025_reg WHERE ${whereClause}`;
+  // const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
+  // const sql = `DELETE FROM kpi_msa_2025_reg WHERE ${whereClause}`;
 
-  connection.query(sql, searchStrings, (err, results) => {
-    if (err) throw err;
-    console.log(`Deleted ${results.affectedRows} rows`);
-  });
+  // connection.query(sql, searchStrings, (err, results) => {
+  //   if (err) throw err;
+  //   console.log(`Deleted ${results.affectedRows} rows`);
+  // });
   // connection.end();
 }
 
@@ -82,13 +82,13 @@ function fulfillment_hsi_tif() {
   const searchStrings = ['TERRITORY 1', 'TERRITORY 2', 'TERRITORY 3', 'BALI', 'MALANG', 'NUSA TENGGARA', 'SEMARANG', 'SIDOARJO', 'SOLO', 'SURAMADU', 'YOGYAKARTA', 'TERRITORY 4'];
 
   // Buat bagian WHERE dengan NOT LIKE untuk setiap kata
-  const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
-  const sql = `DELETE FROM kpi_msa_2025_tif WHERE ${whereClause}`;
+  // const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
+  // const sql = `DELETE FROM kpi_msa_2025_tif WHERE ${whereClause}`;
 
-  connection.query(sql, searchStrings, (err, results) => {
-    if (err) throw err;
-    console.log(`Deleted ${results.affectedRows} rows`);
-  });
+  // connection.query(sql, searchStrings, (err, results) => {
+  //   if (err) throw err;
+  //   console.log(`Deleted ${results.affectedRows} rows`);
+  // });
   // connection.end();
 }
 
@@ -172,6 +172,60 @@ function fulfillment_ih_tif() {
   // Buat bagian WHERE dengan NOT LIKE untuk setiap kata
   const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
   const sql = `DELETE FROM kpi_endstate_monthly_tif WHERE ${whereClause}`;
+
+  connection.query(sql, searchStrings, (err, results) => {
+    if (err) throw err;
+    console.log(`Deleted ${results.affectedRows} rows`);
+  });
+  // connection.end();
+}
+
+function fulfillment_ih_ccm() {
+  const filePath = path.join(__dirname, 'wsa', 'wsa_fulfillment_ccm.csv').replace(/\\/g, '/');
+  const query = `
+  LOAD DATA LOCAL INFILE ?
+  INTO TABLE kpi_endstate_monthly_ccm
+  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+  LINES TERMINATED BY '\n'
+  (blank, lokasi, tti_comply, tti_not_comply, tti_ps_ih, tti_real, tti_ach, ffg_comply, ffg_not_comply, ffg_jml_ps, ffg_real, ffg_ach, ttr_ffg_comply, ttr_ffg_not_comply, ttr_ffg_ggn_wsa, ttr_ffg_real, ttr_ffg_ach, ttr_ffg_wilsus, ttr_ffg_ggn)  SET insert_at = CURRENT_TIMESTAMP;`;
+
+  connection.query({
+    sql: query,
+    values: [filePath],
+    infileStreamFactory: (path) => fs.createReadStream(path), // StreamFactory untuk membaca file CSV
+  });
+  console.log(`wsa_fulfillment.csv Berhasil Di input ke Database`);
+
+  // HAPUS DATA
+  const searchStrings = [
+    'AREA 1',
+    'AREA 2',
+    'AREA 3',
+    'AREA 4',
+    'BALI NUSRA',
+    'DENPASAR',
+    'FLORES',
+    'KUPANG',
+    'MATARAM',
+    'JATENG-DIY',
+    'MAGELANG',
+    'PEKALONGAN',
+    'PURWOKERTO',
+    'SEMARANG',
+    'SURAKARTA',
+    'YOGYAKARTA',
+    'JATIM',
+    'JEMBER',
+    'LAMONGAN',
+    'MADIUN',
+    'MALANG',
+    'SIDOARJO',
+    'SURABAYA',
+  ];
+
+  // Buat bagian WHERE dengan NOT LIKE untuk setiap kata
+  const whereClause = searchStrings.map(() => 'lokasi NOT LIKE ?').join(' AND ');
+  const sql = `DELETE FROM kpi_endstate_monthly_ccm WHERE ${whereClause}`;
 
   connection.query(sql, searchStrings, (err, results) => {
     if (err) throw err;
@@ -268,12 +322,35 @@ function fulfillment_ih_tif_history() {
   // connection.end();
 }
 
+function insert_file_download() {
+  const filePath = path.join(__dirname, 'wsa', 'wsa_fulfillment_tif.csv').replace(/\\/g, '/');
+  const query = `
+  LOAD DATA LOCAL INFILE ?
+  INTO TABLE kpi_endstate_monthly_tif_history
+  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+  LINES TERMINATED BY '\n'
+  (blank, lokasi, tti_comply, tti_not_comply, tti_ps_ih, tti_real, tti_ach, ffg_comply, ffg_not_comply, ffg_jml_ps, ffg_real, ffg_ach, ttr_ffg_comply, ttr_ffg_not_comply, ttr_ffg_ggn_wsa, ttr_ffg_real, ttr_ffg_ach, ttr_ffg_wilsus, ttr_ffg_ggn) SET created_at = CURRENT_TIMESTAMP;`;
+
+  connection.query({
+    sql: query,
+    values: [filePath],
+    infileStreamFactory: (path) => fs.createReadStream(path), // StreamFactory untuk membaca file CSV
+  });
+
+  connection.query(sql, searchStrings, (err, results) => {
+    if (err) throw err;
+    console.log(`Deleted ${results.affectedRows} rows`);
+  });
+  // connection.end();
+}
+
 fulfillment_hsi_reg();
 fulfillment_hsi_tif();
-fulfillment_ih_reg();
-fulfillment_ih_tif();
+// fulfillment_ih_reg();
+// fulfillment_ih_tif();
+// fulfillment_ih_ccm();
 
-fulfillment_ih_reg_history();
-fulfillment_ih_tif_history();
+// fulfillment_ih_reg_history();
+// fulfillment_ih_tif_history();
 console.log('Program selesai.');
 connection.end();

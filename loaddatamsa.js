@@ -4,9 +4,13 @@ const pool = require('./connection');
 const { insertDate } = require('./currentDate.js');
 
 // Fungsi untuk menghapus data lama berdasarkan tanggal dan uic
-function deleteOldData() {
+function deleteOldData(table) {
   return new Promise((resolve, reject) => {
-    const deleteQuery = `DELETE FROM msa_upload WHERE uic = "upload_by_roc" AND insert_at = ?`;
+    const deleteQuery = `
+      DELETE FROM ${table} 
+      WHERE REPLACE(uic, CHAR(13), '') = 'operasional' 
+        AND insert_at = ?
+    `;
 
     pool.query(deleteQuery, [insertDate], (err, results) => {
       if (err) {
@@ -21,13 +25,13 @@ function deleteOldData() {
 }
 
 // Fungsi untuk mengimpor CSV ke database
-function loadCSV(filename) {
+function loadCSV(filename, table) {
   return new Promise((resolve, reject) => {
     const csvPath = `D:/SCRAPPERS/Scrapper/loaded_file/msa_upload/${filename}`;
 
     const loadQuery = `
       LOAD DATA LOCAL INFILE ?
-      INTO TABLE msa_upload
+      INTO TABLE ${table}
       FIELDS TERMINATED BY ',' 
       ENCLOSED BY '"'
       LINES TERMINATED BY '\n'
@@ -56,9 +60,14 @@ function loadCSV(filename) {
 // Fungsi utama
 async function run() {
   try {
-    await deleteOldData(); // Hapus data lama dulu
-    await loadCSV('district.csv');
-    await loadCSV('tif.csv');
+    await deleteOldData('msa_upload'); // Hapus data lama dulu
+    await deleteOldData('msa_upload_operational'); // Hapus data lama dulu
+    await loadCSV('district.csv', 'msa_upload');
+    await loadCSV('tif.csv', 'msa_upload');
+    await loadCSV('district.csv', 'msa_upload_operational');
+    await loadCSV('tif.csv', 'msa_upload_operational');
+    await loadCSV('ccm.csv', 'msa_upload');
+    await loadCSV('ccm.csv', 'msa_upload_operational');
   } catch (err) {
     console.error(err);
   } finally {

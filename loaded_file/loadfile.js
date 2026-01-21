@@ -27,21 +27,13 @@ async function main() {
   console.log('Melakukan Proses Loaded filedata ke dalam Database');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
 
-  await runCommand('node', ['wsa_gamas'], '\n========== Proses Loaded file WSA GAMAS ===========', 5000);
-  await runCommand('node', ['wsa_assurance'], '\n========== Proses Loaded file WSA ASSURANCE ===========', 5000);
-
-  await runCommand('node', ['fulfillment'], '\n========= Proses Loaded file FULFILLMENT =========', 0);
-  await runCommand('node', ['insert_ff_ih'], '', 5000);
-  await runCommand('node', ['insert_ff_hsi'], '', 5000);
-
-  await runCommand('node', ['asr_wifi'], '\n========= Proses Loaded file ASSURANCE WIFI =========', 5000);
-  await runCommand('node', ['asr_datin'], '\n========= Proses Loaded file ASSURANCE DATIN =========', 5000);
-  await runCommand('node', ['assurance'], '\n========= Proses Loaded file TTR DATIN =========', 5000);
-  await runCommand('node', ['wifi_revi'], '\n========= Proses Loaded file WIFI REVITASISASI =========', 5000);
-  await runCommand('node', ['av_wifi'], '\n========= Proses Loaded file Availability WIFI =========', 5000);
-  await runCommand('node', ['ttr_ffg_non_hsi'], '\n========= Proses Loaded file FFG NON HSI =========', 5000);
-  await runCommand('node', ['ps_re'], '\n========= Proses Loaded file PSRE =========', 5000);
-  await runCommand('node', ['cnop_critical'], '\n========= Proses Loaded CNOP_LATENCY =========', 5000);
+  await runCommand('node', ['mttr_mso'], '\n========= Proses load data MTTR MSO =========', 5000);
+  await runCommand('node', ['wsa_gamas'], '\n========= Proses load data wsa gamas =========', 5000);
+  await runCommand('node', ['wsa_assurance'], '\n========= Proses load data wsa Assurance =========', 5000);
+  await runCommand('node', ['assurance_strive'], '\n========= Proses load data Assurance Strive =========', 5000);
+  // await runCommand('node', ['convert_fulfillment'], '\n========= Proses Convert xls ke csv =========', 5000);
+  // await runCommand('node', ['download_fulfillment'], '\n========= Proses Collect data TTR FFG  =========', 5000);
+  // await runCommand('node', ['insert_ttr_ffg_download'], '\n========= Proses Insert Data TTR FFG =========', 5000);
 
   console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik
