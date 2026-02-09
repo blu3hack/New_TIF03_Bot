@@ -5,5 +5,7 @@ db_connection.js
 connection.js
 *.csv
 *.py
+*.xls
+*.xlsx
 cxconsumer_buttom_up.js
 get_otp.php

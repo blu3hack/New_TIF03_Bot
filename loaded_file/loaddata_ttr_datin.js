@@ -1,6 +1,7 @@
 const fs = require('fs');
 const fastcsv = require('fast-csv');
 const connectionPromise = require('./connection');
+
 async function deleteData(table) {
   const connection = await connectionPromise;
   const sql = `DELETE FROM \`${table}\``;
@@ -10,7 +11,7 @@ async function deleteData(table) {
 async function importCSV(table, fileName) {
   const connection = await connectionPromise;
   const filePath = `D:/SCRAPPERS/Scrapper/loaded_file/download_fulfillment/${fileName}.csv`;
-  const selectedCols = ['org_1', 'org_2', 'first_cust_assign', 'f_ttr'];
+  const selectedCols = ['INCIDENT', 'WORKZONE', 'WITEL', 'COMPLIANCE', 'KATEGORI'];
   const rows = [];
 
   await new Promise((resolve, reject) => {
@@ -28,7 +29,7 @@ async function importCSV(table, fileName) {
     return;
   }
 
-  const batchSize = 1000;
+  const batchSize = 300;
   for (let i = 0; i < rows.length; i += batchSize) {
     const batch = rows.slice(i, i + batchSize);
     const placeholders = batch.map(() => `(${selectedCols.map(() => '?').join(',')})`).join(',');
@@ -43,20 +44,8 @@ async function importCSV(table, fileName) {
 
 async function main() {
   try {
-    await deleteData('download_fulfillment_tif');
-    await deleteData('download_fulfillment_regional');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (1)');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (2)');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (3)');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (4)');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (5)');
-    await importCSV('download_fulfillment_regional', 'data_detail_202602 (6)');
-
-    await importCSV('download_fulfillment_tif', 'data_detail_202511 (7)');
-    await importCSV('download_fulfillment_tif', 'data_detail_202511 (8)');
-    await importCSV('download_fulfillment_tif', 'data_detail_202511 (9)');
-    await importCSV('download_fulfillment_tif', 'data_detail_202511 (10)');
+    await deleteData('helper_ttr_datin');
+    await importCSV('helper_ttr_datin', "REPORT_TIKET_COMPLIANCE24_'_'TERRITORY 3'_''_'DATIN24_-");
   } catch (err) {
     console.error('ERROR:', err.message);
   } finally {

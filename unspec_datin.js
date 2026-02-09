@@ -170,7 +170,7 @@ const fs = require('fs');
             .map((row) =>
               Array.from(row.querySelectorAll('td, th'))
                 .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
-                .join(',')
+                .join(','),
             )
             .join('\n');
         });
@@ -239,7 +239,7 @@ const fs = require('fs');
               .map((row) =>
                 Array.from(row.querySelectorAll('td, th'))
                   .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
-                  .join(',')
+                  .join(','),
               )
               .join('\n');
           }, tableSelector);
@@ -307,7 +307,7 @@ const fs = require('fs');
               .map((row) =>
                 Array.from(row.querySelectorAll('td, th'))
                   .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
-                  .join(',')
+                  .join(','),
               )
               .join('\n');
           }, tableSelector);
@@ -387,7 +387,7 @@ const fs = require('fs');
             .map((row) =>
               Array.from(row.querySelectorAll('td, th'))
                 .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
-                .join(',')
+                .join(','),
             )
             .join('\n');
         });
@@ -456,7 +456,7 @@ const fs = require('fs');
             .map((row) =>
               Array.from(row.querySelectorAll('td, th'))
                 .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
-                .join(',')
+                .join(','),
             )
             .join('\n');
         });

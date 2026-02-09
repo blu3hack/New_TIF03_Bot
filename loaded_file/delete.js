@@ -2,7 +2,7 @@ const connection = require('./connection');
 const fs = require('fs');
 const path = require('path');
 
-const table = ['kpi_endstate_monthly_reg', 'kpi_endstate_monthly_tif', 'kpi_msa_2025_reg', 'kpi_msa_2025_tif', 'wifi_revi_reg'];
+const table = ['kpi_endstate_monthly_reg', 'kpi_endstate_monthly_tif', 'kpi_msa_2025_reg', 'kpi_msa_2025_tif', 'wifi_revi_reg', 'kpi_endstate_monthly_ccm'];
 async function deleteTables() {
   try {
     const deletePromises = table.map((tbl) => {
@@ -71,4 +71,5 @@ clearFolder('./cnop');
 clearFolder('./ps_re');
 clearFolder('./msa_upload');
 clearFolder('./unspec_datin');
+clearFolder('./service_sugar');
 deleteTables();

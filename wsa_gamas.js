@@ -184,13 +184,13 @@ const { periode_long_format } = require('./currentDate');
           }
         },
         inputSelector,
-        result
+        result,
       );
 
       await tombol();
       const segment_wsa = await page.evaluate(() => {
         const table = document.querySelector(
-          'body > div.layout-wrapper.layout-navbar-full.layout-horizontal.layout-without-menu > div > div > div > div.container-xxl.flex-grow-1.container-p-y > div > div > div.nav-align-top.mb-4 > table:nth-child(2)'
+          'body > div.layout-wrapper.layout-navbar-full.layout-horizontal.layout-without-menu > div > div > div > div.container-xxl.flex-grow-1.container-p-y > div > div > div.nav-align-top.mb-4 > table:nth-child(2)',
         );
         const rows = Array.from(table.querySelectorAll('tr'));
         return rows
@@ -231,7 +231,7 @@ const { periode_long_format } = require('./currentDate');
     async function sugar_assurance(company, regional, witel, nama_file) {
       // pilih tahun periode
       const periode_selector = '#periodeValue';
-      const option_periode_Selector = '#periodeValue > option:nth-child(2)';
+      const option_periode_Selector = '#periodeValue > option:nth-child(1)';
       await page.waitForSelector(periode_selector);
       await page.evaluate(
         (periode_selector, option_periode_Selector) => {
@@ -244,7 +244,7 @@ const { periode_long_format } = require('./currentDate');
           }
         },
         periode_selector,
-        option_periode_Selector
+        option_periode_Selector,
       );
 
       // pilih company
@@ -346,7 +346,7 @@ const { periode_long_format } = require('./currentDate');
     async function ser_avail(company, regional, witel, nama_file) {
       // pilih tahun periode
       const periode_selector = '#periodeValue';
-      const option_periode_Selector = '#periodeValue > option:nth-child(2)';
+      const option_periode_Selector = '#periodeValue > option:nth-child(1)';
       await page.waitForSelector(periode_selector);
       await page.evaluate(
         (periode_selector, option_periode_Selector) => {
@@ -359,7 +359,7 @@ const { periode_long_format } = require('./currentDate');
           }
         },
         periode_selector,
-        option_periode_Selector
+        option_periode_Selector,
       );
 
       // pilih company
@@ -479,7 +479,7 @@ const { periode_long_format } = require('./currentDate');
       async function sub_ttr(company, regional, witel, nama_file) {
         // pilih tahun periode
         const periode_selector = '#periodeValue';
-        const option_periode_Selector = '#periodeValue > option:nth-child(2)';
+        const option_periode_Selector = '#periodeValue > option:nth-child(1)';
         await page.waitForSelector(periode_selector);
         await page.evaluate(
           (periode_selector, option_periode_Selector) => {
@@ -492,7 +492,7 @@ const { periode_long_format } = require('./currentDate');
             }
           },
           periode_selector,
-          option_periode_Selector
+          option_periode_Selector,
         );
 
         // pilih company
@@ -591,7 +591,7 @@ const { periode_long_format } = require('./currentDate');
 
   // Proses DOwnload Data
   await ttr();
-  // await SegmenAkses();
+  await SegmenAkses();
   await AsrGuarantee();
   await ServAvailability();
 

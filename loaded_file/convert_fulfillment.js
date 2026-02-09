@@ -56,29 +56,32 @@ function convertXLSToCSV(fileName) {
   console.log(`file ${fileName}.csv berhasil disimpan dengan jumlah baris: ${rows.length}`);
 }
 
-// convertXLSToCSV('data_detail_202511');
-// convertXLSToCSV('data_detail_202511 (1)');
-// convertXLSToCSV('data_detail_202511 (2)');
-// convertXLSToCSV('data_detail_202511 (3)');
-// convertXLSToCSV('data_detail_202511 (4)');
-// convertXLSToCSV('data_detail_202511 (5)');
-// convertXLSToCSV('data_detail_202511 (6)');
+convertXLSToCSV('data_detail_202602');
+convertXLSToCSV('data_detail_202602 (1)');
+convertXLSToCSV('data_detail_202602 (2)');
+convertXLSToCSV('data_detail_202602 (3)');
+convertXLSToCSV('data_detail_202602 (4)');
+convertXLSToCSV('data_detail_202602 (5)');
+convertXLSToCSV('data_detail_202602 (6)');
 // convertXLSToCSV('data_detail_202511 (7)');
 // convertXLSToCSV('data_detail_202511 (8)');
 // convertXLSToCSV('data_detail_202511 (9)');
 // convertXLSToCSV('data_detail_202511 (10)');
-
-// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_-");
-// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_- (1)");
-// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_-");
-// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_- (1)");
 
 // convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'DATIN24_-");
 // convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'DATIN24_- (1)");
 // convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'DATIN24_-");
 // convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'DATIN24_- (1)");
 
-convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_-");
-convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_- (1)");
-convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_-");
-convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_- (1)");
+// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_-");
+// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-4'_''_'HSI24_- (1)");
+// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_-");
+// convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'REG-5'_''_'HSI24_- (1)");
+
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-4'_''_'DATIN24_-");
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-4'_''_'DATIN24_- (1)");
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-5'_''_'DATIN24_-");
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-5'_''_'DATIN24_- (1)");
+
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-4'_''_'INDIBIZ_-");
+// convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'REG-5'_''_'INDIBIZ_-");

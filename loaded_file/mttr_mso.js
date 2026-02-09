@@ -79,7 +79,7 @@ function inputDataToDatabase(file, insertToTable) {
                 resolveInsert();
               }
             });
-          })
+          }),
         );
       })
       .on('end', async () => {

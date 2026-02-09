@@ -141,7 +141,7 @@ const { get } = require('request-promise-native');
             }
           },
           selectSelector,
-          optionValue
+          optionValue,
         );
         await page.waitForTimeout(10000);
         // Tunggu elemen tombol siap
@@ -231,18 +231,18 @@ const { get } = require('request-promise-native');
         });
       }
 
-      await page.waitForTimeout(60000);
-      await get_download(1);
-      await get_download(402);
-      await get_download(580);
-      await get_download(721);
-      await get_download(890);
-      await get_download(1217);
-      await get_download(1372);
-      await fulfillment_data('wsa_fulfillment_reg');
+      // await page.waitForTimeout(60000);
+      // await get_download(1);
+      // await get_download(402);
+      // await get_download(580);
+      // await get_download(721);
+      // await get_download(890);
+      // await get_download(1217);
+      // await get_download(1372);
+      // await fulfillment_data('wsa_fulfillment_reg');
 
-      // await fulfillment_data(1, 'wsa_fulfillment_reg');
-      // await fulfillment_data(10, 'wsa_fulfillment_tif');
+      // // await fulfillment_data(1, 'wsa_fulfillment_reg');
+      // // await fulfillment_data(10, 'wsa_fulfillment_tif');
       console.log('Lakukan Selection manual pada KPI TIF Endstate Monthly');
 
       await page.waitForTimeout(60000);
@@ -283,7 +283,7 @@ const { get } = require('request-promise-native');
             }
           },
           selectSelector,
-          optionValue
+          optionValue,
         );
         await page.waitForTimeout(10000);
         // Tunggu elemen tombol siap
@@ -366,7 +366,7 @@ const { get } = require('request-promise-native');
             }
           },
           startSelector,
-          startdate
+          startdate,
         );
 
         console.log(enddate);
@@ -382,7 +382,7 @@ const { get } = require('request-promise-native');
             }
           },
           endSelector,
-          enddate
+          enddate,
         );
 
         await page.waitForTimeout(3000);
@@ -412,7 +412,7 @@ const { get } = require('request-promise-native');
               const table = document.querySelector('#table_lokasi > tbody');
               return table && table.querySelectorAll('tr').length > 0;
             },
-            { timeout: 0 }
+            { timeout: 0 },
           );
 
           const wsa_ful = await page.evaluate(() => {
@@ -444,8 +444,8 @@ const { get } = require('request-promise-native');
       console.log('Proses Pengambilan WSA Fulfillment HSI Selesai');
     }
 
-    // await wsa_fulfillment_ih(page);
-    await wsa_fulfillment_hsi(page);
+    await wsa_fulfillment_ih(page);
+    // await wsa_fulfillment_hsi(page);
     // await wsa_fulfillment_ccm(page);
   } catch (error) {
     console.error('Terjadi kesalahan:', error.message);

@@ -23,7 +23,7 @@ function deleteExistingData() {
           }
         });
       });
-    })
+    }),
   );
 }
 
@@ -73,7 +73,7 @@ function inputDataToDatabase(file, jenis, insertToTable) {
                 resolve();
               }
             });
-          })
+          }),
         );
       })
       .on('end', () => {

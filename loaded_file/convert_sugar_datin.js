@@ -43,9 +43,9 @@ function convertXLSToCSV(fileName) {
     .map((r) =>
       r
         .map(
-          (col) => `"${col.replace(/"/g, '""')}"` // escape double quotes
+          (col) => `"${col.replace(/"/g, '""')}"`, // escape double quotes
         )
-        .join(',')
+        .join(','),
     )
     .join('\n');
 
@@ -56,14 +56,10 @@ function convertXLSToCSV(fileName) {
   console.log(`file ${fileName}.csv berhasil disimpan dengan jumlah baris: ${rows.length}`);
 }
 
-convertXLSToCSV('data_detail_202511');
-convertXLSToCSV('data_detail_202511 (1)');
-convertXLSToCSV('data_detail_202511 (2)');
-convertXLSToCSV('data_detail_202511 (3)');
-convertXLSToCSV('data_detail_202511 (4)');
-convertXLSToCSV('data_detail_202511 (5)');
-convertXLSToCSV('data_detail_202511 (6)');
-convertXLSToCSV('data_detail_202511 (7)');
-convertXLSToCSV('data_detail_202511 (8)');
-convertXLSToCSV('data_detail_202511 (9)');
-convertXLSToCSV('data_detail_202511 (10)');
+convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'TERRITORY3'_''_'DATIN24_-");
+convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'TERRITORY3'_''_'DWDM_-");
+convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'TERRITORY3'_''_'HSI24_-");
+convertXLSToCSV("REPORT_SUMMARY_GAUL_'_'TERRITORY3'_''_'SIPTRUNK_-");
+convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'TERRITORY 3'_''_'DATIN24_-");
+convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'TERRITORY 3'_''_'INDIBIZ_-");
+convertXLSToCSV("REPORT_TIKET_COMPLIANCE24_'_'TERRITORY 3'_''_'RESELLER_-");

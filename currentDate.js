@@ -39,6 +39,8 @@ const enddate_short_format = today_short_format;
 const enddate_long_format = today;
 const insertDate = today;
 
+// const insertDate = '2025-10-30';
+
 console.log(lastDate);
 
 module.exports = {
@@ -53,18 +55,18 @@ module.exports = {
   MaxDate: lastDate,
 };
 
-// const periode_long_format = `2025-12-01 to 2025-12-31`;
-// const periode_short_format = `202512`;
+// const periode_long_format = `2026-01-01 to 2026-01-31`;
+// const periode_short_format = `202601`;
 
-// const startdate_short_format = `20251201`;
-// const enddate_short_format = `20251231`;
+// const startdate_short_format = `20260101`;
+// const enddate_short_format = `20260131`;
 
-// const startdate_long_format = `2025-12-01`;
-// const enddate_long_format = `2025-12-31`;
+// const startdate_long_format = `2026-01-01`;
+// const enddate_long_format = `2026-01-31`;
 
-// const insertDate = '2025-12-31';
-// const periode_end_format = '2025-01-01 to 2025-12-31';
-// const lastDate = '2025-12-31';
+// const insertDate = '2026-01-31';
+// const periode_end_format = '2026-01-01 to 2026-01-31';
+// const lastDate = '2026-01-31';
 
 // module.exports = {
 //   periode_long_format: periode_long_format,
