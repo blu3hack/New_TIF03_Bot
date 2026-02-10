@@ -74,9 +74,9 @@ async function insertPivotDataBothAreas(table, tanggal, lokasi, maxRetries = 3) 
 // Fungsi utama untuk menjalankan semua
 async function runAll() {
   const connection = await mysql.createConnection({
-    host: '10.110.13.43',
-    user: 'cxmention',
-    password: 'tr5ju4r4#',
+    host: 'xxxxxxxxxxxxxxxx',
+    user: 'xxxxxxxxxxx',
+    password: '############',
     database: 'perf_tif',
   });
 
