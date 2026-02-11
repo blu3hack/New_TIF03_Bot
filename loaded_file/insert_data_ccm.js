@@ -37,10 +37,12 @@ async function deleteExistingData() {
     'ps_re',
     'ttr_ffg_download',
     'cnop_latency',
+    'ttr_indibiz',
+    'ttr_reseller',
   ];
 
   const currentDate = insertDate;
-  const jenis_for_delete = ['area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm'];
+  const jenis_for_delete = ['area_ccm'];
 
   const inPlaceholders = jenis_for_delete.map(() => '?').join(',');
 
@@ -130,10 +132,8 @@ async function ttr_datin() {
 
 async function sugar_hsi() {
   const currentDate = insertDate;
-
   const sql = `
     INSERT INTO hsi_sugar (tgl, jenis, treg, \`real\`)
-
     SELECT
       tgl,
       'area_ccm',
@@ -195,7 +195,7 @@ async function sugar_hsi() {
 
   try {
     await queryAsync(sql, [currentDate, currentDate, currentDate]);
-    await queryAsync(sql2, [currentDate]);
+    // await queryAsync(sql2, [currentDate]);
     console.log('Insert ke table hsi_sugar berhasil:');
   } catch (err) {
     console.error('Error insert sugar_hsi:', err);
@@ -269,7 +269,7 @@ async function sugar_datin() {
 
   try {
     await queryAsync(sql, [currentDate, currentDate, currentDate]);
-    await queryAsync(sql2, [currentDate]);
+    // await queryAsync(sql2, [currentDate]);
     console.log('Insert ke table sugar datin berhasil:');
   } catch (err) {
     console.error('Error insert sugar datin:', err);
@@ -703,6 +703,122 @@ async function cnop_latency() {
   }
 }
 
+async function ttr_indibiz() {
+  const currentDate = insertDate;
+
+  const sql = `
+    INSERT INTO ttr_indibiz (jenis, treg, tgl, real_1, real_2)
+    SELECT
+      'area_ccm' AS jenis,
+      'BALI NUSRA' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+    FROM ttr_indibiz
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('DENPASAR', 'SINGARAJA', 'NTB', 'NTT')
+    GROUP BY tgl
+      
+    UNION ALL
+      
+    SELECT
+      'area_ccm' AS jenis,
+      'JAWA TIMUR' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+    FROM ttr_indibiz
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('MADIUN', 'MALANG', 'JEMBER', 'SIDOARJO', 'SURABAYA SELATAN', 'SURABAYA UTARA', 'MADURA', 'PASURUAN')
+    GROUP BY tgl
+
+    UNION ALL
+
+    SELECT
+      'area_ccm' AS jenis,
+      'JATENG DIY' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+      
+    FROM ttr_indibiz
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('KUDUS', 'MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SOLO', 'YOGYAKARTA')
+    GROUP BY tgl
+  `;
+
+  try {
+    await queryAsync(sql, [currentDate, currentDate, currentDate]);
+    console.log('Insert ke table ttr_indibiz berhasil:');
+  } catch (err) {
+    console.error('Error insert ttr_indibiz:', err);
+  }
+}
+
+async function ttr_reseller() {
+  const currentDate = insertDate;
+
+  const sql = `
+    INSERT INTO ttr_reseller (jenis, treg, tgl, real_1, real_2)
+    SELECT
+      'area_ccm' AS jenis,
+      'BALI NUSRA' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+    FROM ttr_reseller
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('DENPASAR', 'SINGARAJA', 'NTB', 'NTT')
+    GROUP BY tgl
+      
+    UNION ALL
+      
+    SELECT
+      'area_ccm' AS jenis,
+      'JAWA TIMUR' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+    FROM ttr_reseller
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('MADIUN', 'MALANG', 'JEMBER', 'SIDOARJO', 'SURABAYA SELATAN', 'SURABAYA UTARA', 'MADURA', 'PASURUAN')
+    GROUP BY tgl
+
+    UNION ALL
+
+    SELECT
+      'area_ccm' AS jenis,
+      'JATENG DIY' AS treg,
+      tgl,
+      ROUND(AVG(NULLIF(real_1, '-')), 2) AS real_1,
+      ROUND(AVG(NULLIF(real_2, '-')), 2) AS real_2
+      
+    FROM ttr_reseller
+    WHERE
+      tgl = ?
+      AND jenis = 'reg'
+      AND treg IN ('KUDUS', 'MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SOLO', 'YOGYAKARTA')
+    GROUP BY tgl
+  `;
+
+  try {
+    await queryAsync(sql, [currentDate, currentDate, currentDate]);
+    console.log('Insert ke table ttr_reseller berhasil:');
+  } catch (err) {
+    console.error('Error insert ttr_reseller:', err);
+  }
+}
+
 // ========================= group area_ccm functions =========================
 
 async function insert_ccm_group1(table) {
@@ -773,6 +889,8 @@ async function main() {
     await ff_hsi();
     await ps_re();
     await cnop_latency();
+    await ttr_indibiz();
+    await ttr_reseller();
     insert_ccm_group1('ttd_non_hsi');
     insert_ccm_group1('ttd_wifi');
     insert_ccm_group1('ttr_ffg_non_hsi');

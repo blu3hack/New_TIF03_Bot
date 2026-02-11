@@ -60,14 +60,10 @@ function loadCSV(filename, table) {
 // Fungsi utama
 async function run() {
   try {
-    await deleteOldData('msa_upload'); // Hapus data lama dulu
-    await deleteOldData('msa_upload_operational'); // Hapus data lama dulu
-    await loadCSV('district.csv', 'msa_upload');
-    await loadCSV('tif.csv', 'msa_upload');
-    await loadCSV('district.csv', 'msa_upload_operational');
-    await loadCSV('tif.csv', 'msa_upload_operational');
-    await loadCSV('ccm.csv', 'msa_upload');
-    await loadCSV('ccm.csv', 'msa_upload_operational');
+    await deleteOldData('wisa_upload_operational'); // Hapus data lama dulu
+    await loadCSV('tif.csv', 'wisa_upload_operational');
+    await loadCSV('district.csv', 'wisa_upload_operational');
+    await loadCSV('ccm.csv', 'wisa_upload_operational');
   } catch (err) {
     console.error(err);
   } finally {

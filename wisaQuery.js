@@ -373,7 +373,7 @@ async function main() {
         }
 
         if (lokasi_dis.includes(newRow.lokasi)) {
-          newRow = { ...newRow, Area: 'dis' };
+          newRow = { ...newRow, Area: 'district' };
         }
       } else if (namaFile === 'district.csv') {
         const region4 = ['KUDUS', 'MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SOLO', 'YOGYAKARTA'];
@@ -381,7 +381,7 @@ async function main() {
 
         newRow = {
           ...row,
-          Area: region4.includes(row.lokasi) ? 'reg4' : nasional.includes(row.lokasi) ? 'reg' : 'reg5',
+          Area: region4.includes(row.lokasi) ? 'witel' : nasional.includes(row.lokasi) ? 'nas' : 'witel',
         };
 
         if (row.lokasi.includes('SURABAYA')) {
@@ -395,14 +395,8 @@ async function main() {
 
         if (area_ccm.includes(row.lokasi)) {
           newRow = { ...row, Area: 'area_ccm' };
-        } else if (balnus_ccm.includes(row.lokasi)) {
-          newRow = { ...row, Area: 'balnus_ccm' };
-        } else if (jateng_ccm.includes(row.lokasi)) {
-          newRow = { ...row, Area: 'jateng_ccm' };
-        } else if (jatim_ccm.includes(row.lokasi)) {
-          newRow = { ...row, Area: 'jatim_ccm' };
         } else {
-          newRow = { ...row };
+          newRow = { ...row, Area: 'branch' };
         }
       }
 
