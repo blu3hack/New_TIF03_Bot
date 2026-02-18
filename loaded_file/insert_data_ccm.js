@@ -39,6 +39,8 @@ async function deleteExistingData() {
     'cnop_latency',
     'ttr_indibiz',
     'ttr_reseller',
+    'sqm_datin',
+    'sqm_hsi',
   ];
 
   const currentDate = insertDate;
@@ -819,6 +821,128 @@ async function ttr_reseller() {
   }
 }
 
+async function sqm_datin() {
+  const currentDate = insertDate;
+
+  const sql = `
+    INSERT INTO sqm_datin (tgl, jenis, regional, comply)
+    SELECT
+        tgl,
+        'area_ccm' as jenis,
+        'BALI NUSRA' AS regional,
+          
+        ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_datin
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN ('DENPASAR', 'SINGARAJA', 'NTB', 'NTT')
+        GROUP BY tgl
+
+        UNION ALL
+
+        SELECT
+          tgl,
+          'area_ccm' as jenis,
+          'JAWA TIMUR' as regional,
+
+          ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_datin
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN (
+            'MADIUN','MALANG','JEMBER','SIDOARJO',
+            'SURABAYA SELATAN','SURABAYA UTARA',
+            'MADURA','PASURUAN'
+          )
+        GROUP BY tgl
+
+        UNION ALL
+
+        SELECT
+          tgl,
+          'area_ccm' as jenis,
+          'JATENG DIY' as regional,
+          
+          ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_datin
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN (
+            'KUDUS','MAGELANG','PEKALONGAN',
+            'PURWOKERTO','SEMARANG','SOLO','YOGYAKARTA'
+          )
+        GROUP BY tgl
+  `;
+
+  try {
+    await queryAsync(sql, [currentDate, currentDate, currentDate]);
+    console.log('Insert ke table ttr_reseller berhasil:');
+  } catch (err) {
+    console.error('Error insert ttr_reseller:', err);
+  }
+}
+
+async function sqm_datin() {
+  const currentDate = insertDate;
+
+  const sql = `
+    INSERT INTO sqm_hsi (tgl, jenis, regional, comply)
+    SELECT
+        tgl,
+        'area_ccm' as jenis,
+        'BALI NUSRA' AS regional,
+          
+        ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_hsi
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN ('DENPASAR', 'SINGARAJA', 'NTB', 'NTT')
+        GROUP BY tgl
+
+        UNION ALL
+
+        SELECT
+          tgl,
+          'area_ccm' as jenis,
+          'JAWA TIMUR' as regional,
+
+          ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_hsi
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN (
+            'MADIUN','MALANG','JEMBER','SIDOARJO',
+            'SURABAYA SELATAN','SURABAYA UTARA',
+            'MADURA','PASURUAN'
+          )
+        GROUP BY tgl
+
+        UNION ALL
+
+        SELECT
+          tgl,
+          'area_ccm' as jenis,
+          'JATENG DIY' as regional,
+          
+          ROUND(AVG(NULLIF(comply, '-')), 2) as comply
+        FROM sqm_hsi
+        WHERE tgl = ?
+          AND jenis = 'reg'
+          AND regional IN (
+            'KUDUS','MAGELANG','PEKALONGAN',
+            'PURWOKERTO','SEMARANG','SOLO','YOGYAKARTA'
+          )
+        GROUP BY tgl
+  `;
+
+  try {
+    await queryAsync(sql, [currentDate, currentDate, currentDate]);
+    console.log('Insert ke table ttr_reseller berhasil:');
+  } catch (err) {
+    console.error('Error insert ttr_reseller:', err);
+  }
+}
+
 // ========================= group area_ccm functions =========================
 
 async function insert_ccm_group1(table) {
@@ -891,6 +1015,8 @@ async function main() {
     await cnop_latency();
     await ttr_indibiz();
     await ttr_reseller();
+    await sqm_datin();
+    await sqm_hsi();
     insert_ccm_group1('ttd_non_hsi');
     insert_ccm_group1('ttd_wifi');
     insert_ccm_group1('ttr_ffg_non_hsi');

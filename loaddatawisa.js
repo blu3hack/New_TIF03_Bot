@@ -62,7 +62,7 @@ async function run() {
   try {
     await deleteOldData('wisa_upload_operational'); // Hapus data lama dulu
     await loadCSV('tif.csv', 'wisa_upload_operational');
-    await loadCSV('district.csv', 'wisa_upload_operational');
+    // await loadCSV('district.csv', 'wisa_upload_operational');
     await loadCSV('ccm.csv', 'wisa_upload_operational');
   } catch (err) {
     console.error(err);

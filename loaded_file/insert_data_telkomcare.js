@@ -119,7 +119,7 @@ async function sugar_hsi() {
 
   try {
     await queryAsync(sql, [currentDate]);
-    console.log('Insert ke sugar_datin berhasil:');
+    console.log('Insert ke sugar_hsi berhasil:');
   } catch (err) {
     console.error('Error insert:', err);
   }
@@ -147,7 +147,7 @@ async function ttr_indibiz() {
   `;
   try {
     await queryAsync(sql, [currentDate]);
-    console.log('Insert ke sugar_datin berhasil:');
+    console.log('Insert ke ttr_indibiz berhasil:');
   } catch (err) {
     console.error('Error insert:', err);
   }
@@ -175,7 +175,7 @@ async function ttr_reseller() {
   `;
   try {
     await queryAsync(sql, [currentDate]);
-    console.log('Insert ke sugar_datin berhasil:');
+    console.log('Insert ke ttr_reseller berhasil:');
   } catch (err) {
     console.error('Error insert:', err);
   }
