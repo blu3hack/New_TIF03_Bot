@@ -136,7 +136,7 @@ const { exec } = require('child_process');
           }
         },
         inputSelectorsstartdate,
-        startdate
+        startdate,
       );
       await page.waitForTimeout(3000);
 
@@ -160,7 +160,7 @@ const { exec } = require('child_process');
           }
         },
         inputSelectorenddate,
-        enddate
+        enddate,
       );
 
       await tombol();

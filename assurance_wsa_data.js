@@ -1,15 +1,8 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const csv = require('csv-parser');
-const { secureHeapUsed } = require('crypto');
 const { user_aribi, pass_aribi } = require('./login');
 const { exec } = require('child_process');
-const axios = require('axios');
-const sharp = require('sharp');
-const TelegramBot = require('node-telegram-bot-api');
-const mysql = require('mysql2/promise');
-// const connection = require('./db_connection');
-const { periode_long_format } = require('./currentDate');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: false }); // Buka browser (non-headless)
@@ -128,98 +121,6 @@ const { periode_long_format } = require('./currentDate');
   }
 
   // Ambil data WSA GAMAS
-  async function SegmenAkses() {
-    console.log('============== SEGMEN GAMAS AKSES ===============');
-    await segmen_gamas_akses();
-
-    async function sugar_assurance(company, regional, nama_file) {
-      // pilih company
-      await page.waitForSelector('#company');
-      await page.click('#company');
-
-      await page.evaluate((company) => {
-        const optionElement = document.querySelector(`#company > option:nth-child(${company})`);
-        if (optionElement) {
-          optionElement.selected = true;
-          const selectElement = optionElement.parentElement;
-          selectElement.dispatchEvent(new Event('change'));
-        } else {
-          console.error('Elemen <option> tidak ditemukan.');
-        }
-      }, company);
-      await page.waitForTimeout(3000);
-
-      // pilih regional
-      await page.waitForSelector('#regional');
-      await page.click('#regional');
-
-      await page.evaluate((regional) => {
-        const optionElement = document.querySelector(`#regional > option:nth-child(${regional})`);
-        if (optionElement) {
-          optionElement.selected = true;
-          const selectElement = optionElement.parentElement;
-          selectElement.dispatchEvent(new Event('change'));
-        } else {
-          console.error('Elemen <option> tidak ditemukan.');
-        }
-      }, regional);
-      await page.waitForTimeout(3000);
-
-      // pilih tanggal periode
-      const result = periode_long_format;
-      // console.log(result);
-
-      const inputSelector = '#periode_1_'; // Ganti dengan selector elemen input Anda
-      await page.waitForSelector(inputSelector);
-
-      await page.evaluate(
-        (selector, value) => {
-          const input = document.querySelector(selector);
-          if (input) {
-            input.value = value; // Ubah nilai
-            input.dispatchEvent(new Event('input', { bubbles: true })); // Trigger event input
-            input.dispatchEvent(new Event('change', { bubbles: true })); // Trigger event change
-          } else {
-            console.error(`Elemen dengan selector ${selector} tidak ditemukan.`);
-          }
-        },
-        inputSelector,
-        result,
-      );
-
-      await tombol();
-      const segment_wsa = await page.evaluate(() => {
-        const table = document.querySelector(
-          'body > div.layout-wrapper.layout-navbar-full.layout-horizontal.layout-without-menu > div > div > div > div.container-xxl.flex-grow-1.container-p-y > div > div > div.nav-align-top.mb-4 > table:nth-child(2)',
-        );
-        const rows = Array.from(table.querySelectorAll('tr'));
-        return rows
-          .map((row) => {
-            const columns = Array.from(row.querySelectorAll('td, th'));
-            return columns
-              .map((column) => {
-                let cellValue = column.innerText.trim();
-                // Mengganti koma dengan string kosong
-                if (cellValue.includes(',')) {
-                  cellValue = cellValue.replace(/,/g, '');
-                }
-                return cellValue;
-              })
-              .join(',');
-          })
-          .join('\n');
-      });
-      // console.log(segment_wsa);
-      fs.writeFileSync(`loaded_file/wsa_gamas/${nama_file}.csv`, segment_wsa);
-      console.log(`${nama_file} berhasil didownload \n`);
-    }
-
-    await sugar_assurance(5, 1, 'segmen_tif');
-    await sugar_assurance(5, 4, 'segmen_district');
-    await sugar_assurance(3, 1, 'segmen_reg');
-    await sugar_assurance(3, 5, 'segmen_tr4');
-    await sugar_assurance(3, 6, 'segmen_tr5');
-  }
 
   // Pengambilan data WSA Assurance
   //   ================== proses pengambilan data table =========================
@@ -312,24 +213,6 @@ const { periode_long_format } = require('./currentDate');
     }
 
     await sugar_assurance(5, 1, 1, 'sugar_tif');
-    await sugar_assurance(5, 2, 1, 'sugar_district_tif1');
-    await sugar_assurance(5, 3, 1, 'sugar_district_tif2');
-    await sugar_assurance(5, 4, 1, 'sugar_district_tif3');
-    await sugar_assurance(5, 5, 1, 'sugar_district_tif4');
-    await sugar_assurance(3, 1, 1, 'sugar_nas');
-    await sugar_assurance(3, 2, 1, 'sugar_tr1');
-    await sugar_assurance(3, 3, 1, 'sugar_tr2');
-    await sugar_assurance(3, 4, 1, 'sugar_tr3');
-    await sugar_assurance(3, 5, 1, 'sugar_tr4');
-    await sugar_assurance(3, 6, 1, 'sugar_tr5');
-    await sugar_assurance(3, 7, 1, 'sugar_tr6');
-    await sugar_assurance(3, 8, 1, 'sugar_tr7');
-
-    await sugar_assurance(2, 4, 1, 'sugar_area');
-    await sugar_assurance(2, 4, 2, 'sugar_balnus');
-    await sugar_assurance(2, 4, 3, 'sugar_jateng');
-    await sugar_assurance(2, 4, 4, 'sugar_jatim');
-
     await sugar_assurance(1, 4, 1, 'sugar_area_ccm');
     await sugar_assurance(1, 4, 2, 'sugar_balnus_ccm');
     await sugar_assurance(1, 4, 3, 'sugar_jateng_ccm');
@@ -423,30 +306,12 @@ const { periode_long_format } = require('./currentDate');
           })
           .join('\n');
       });
-      console.log(service_availibility);
+      // console.log(service_availibility);
       fs.writeFileSync(`loaded_file/wsa_gamas/${nama_file}.csv`, service_availibility);
       console.log(`${nama_file} berhasil didownload \n`);
     }
 
     await ser_avail(5, 1, 1, 'service_tif');
-    await ser_avail(5, 2, 1, 'service_district_tif1');
-    await ser_avail(5, 3, 1, 'service_district_tif2');
-    await ser_avail(5, 4, 1, 'service_district_tif3');
-    await ser_avail(5, 5, 1, 'service_district_tif4');
-    await ser_avail(3, 1, 1, 'service_nas');
-    await ser_avail(3, 2, 1, 'service_tr1');
-    await ser_avail(3, 3, 1, 'service_tr2');
-    await ser_avail(3, 4, 1, 'service_tr3');
-    await ser_avail(3, 5, 1, 'service_tr4');
-    await ser_avail(3, 6, 1, 'service_tr5');
-    await ser_avail(3, 7, 1, 'service_tr6');
-    await ser_avail(3, 8, 1, 'service_tr7');
-
-    await ser_avail(2, 4, 1, 'service_area');
-    await ser_avail(2, 4, 2, 'service_balnus');
-    await ser_avail(2, 4, 3, 'service_jateng');
-    await ser_avail(2, 4, 4, 'service_jatim');
-
     await ser_avail(1, 4, 1, 'service_area_ccm');
     await ser_avail(1, 4, 2, 'service_balnus_ccm');
     await ser_avail(1, 4, 3, 'service_jateng_ccm');
@@ -559,24 +424,6 @@ const { periode_long_format } = require('./currentDate');
       }
 
       await sub_ttr(5, 1, 1, 'tif');
-      await sub_ttr(5, 2, 1, 'district_tif1');
-      await sub_ttr(5, 3, 1, 'district_tif2');
-      await sub_ttr(5, 4, 1, 'district_tif3');
-      await sub_ttr(5, 5, 1, 'district_tif4');
-      await sub_ttr(3, 1, 1, 'nas');
-      await sub_ttr(3, 2, 1, 'tr1');
-      await sub_ttr(3, 3, 1, 'tr2');
-      await sub_ttr(3, 4, 1, 'tr3');
-      await sub_ttr(3, 5, 1, 'tr4');
-      await sub_ttr(3, 6, 1, 'tr5');
-      await sub_ttr(3, 7, 1, 'tr6');
-      await sub_ttr(3, 8, 1, 'tr7');
-
-      await sub_ttr(2, 4, 1, 'area');
-      await sub_ttr(2, 4, 2, 'balnus');
-      await sub_ttr(2, 4, 3, 'jateng');
-      await sub_ttr(2, 4, 4, 'jatim');
-
       await sub_ttr(1, 4, 1, 'area_ccm');
       await sub_ttr(1, 4, 2, 'balnus_ccm');
       await sub_ttr(1, 4, 3, 'jateng_ccm');
@@ -591,7 +438,6 @@ const { periode_long_format } = require('./currentDate');
 
   // Proses DOwnload Data
   await ttr();
-  await SegmenAkses();
   await AsrGuarantee();
   await ServAvailability();
 

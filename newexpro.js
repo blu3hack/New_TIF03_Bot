@@ -174,7 +174,7 @@ const { exec } = require('child_process');
               }
             },
             inputSelector,
-            result
+            result,
           );
         }
 
@@ -266,7 +266,7 @@ const { exec } = require('child_process');
               }
             },
             inputSelector,
-            result
+            result,
           );
         }
 
@@ -290,7 +290,7 @@ const { exec } = require('child_process');
               return Array.from(rows).some((r) => Array.from(r.querySelectorAll('td')).some((td) => td.textContent.trim() !== ''));
             },
             { timeout: 0 },
-            table // lempar variabel ke dalam fungsi di atas
+            table, // lempar variabel ke dalam fungsi di atas
           );
 
           // ambil data tabel
@@ -380,7 +380,7 @@ const { exec } = require('child_process');
               }
             },
             inputSelector,
-            result
+            result,
           );
         }
 
@@ -477,7 +477,7 @@ const { exec } = require('child_process');
               }
             },
             inputSelector,
-            result
+            result,
           );
         }
 

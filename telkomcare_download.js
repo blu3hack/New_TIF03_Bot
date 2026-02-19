@@ -126,73 +126,45 @@ const path = require('path');
       });
       const selector = 'body > div.page-container > div.page-content-wrapper > div.page-content > div:nth-child(4) > div > div > div > a';
       await page.waitForSelector(selector, { visible: true, timeout: 60000 });
+      await delay(10000);
       await page.click(selector);
-      await waitAndRename(downloadPath, uniqueName(filename));
+      // await waitAndRename(downloadPath, uniqueName(filename));
     }
 
+    // ttr datin
     // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=DATIN24&tiket=&regional=REG-4&kategori=bukan_gaul',
-    //   'REG-4_SUGAR_DATIN_BUKAN_GAUL',
+    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=DATIN24&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
     // );
     // await delay(20000);
 
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=DATIN24&tiket=&regional=REG-4&kategori=grand_total',
-    //   'REG-4_SUGAR_DATIN_GRAND_TOTAL',
-    // );
-    // await delay(20000);
-
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=DATIN24&tiket=&regional=REG-5&kategori=bukan_gaul',
-    //   'REG-5_SUGAR_DATIN_BUKAN_GAUL',
-    // );
-    // await delay(20000);
-
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=DATIN24&tiket=&regional=REG-5&kategori=grand_total',
-    //   'REG-5_SUGAR_DATIN_GRAND_TOTAL',
-    // );
-
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TELKOMLAMA&tahun=&bulan=&sumber=DATIN24&tiket=TELKOMGAMAS&startdate=2026-01-01&enddate=2026-01-28&custpending=&regional=REG-4&kategori=&tcomp=',
-    //   'REG-4_TTR_DATIN_TELKOMGAMAS',
-    // );
-    // await delay(20000);
-
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TELKOMLAMA&tahun=&bulan=&sumber=DATIN24&tiket=TELKOMGAMAS&startdate=2026-01-01&enddate=2026-01-28&custpending=&regional=REG-5&kategori=&tcomp=',
-    //   'REG-5_TTR_DATIN_TELKOMGAMAS',
-    // );
-    // await delay(20000);
-
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TELKOMLAMA&tahun=&bulan=&sumber=DATIN24&tiket=TELKOMGAMAS&startdate=2026-01-01&enddate=2026-01-28&custpending=&regional=REG-5&kategori=&tcomp=',
-    //   'REG-5_TTR_DATIN_TELKOMGAMAS',
-    // );
-    // await delay(20000);
-
-    await download(
-      'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=HSI24&tiket=&regional=REG-4&kategori=bukan_gaul',
-      'REG-4_SUGAR_HSI_BUKAN_GAUL',
-    );
+    // sugar Datin
+    await download('https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TIF&enddate=2026-02-18&tahun=&bulan=&sumber=DATIN24&tiket=&regional=TERRITORY3&kategori=grand_total');
     await delay(20000);
 
-    await download(
-      'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=HSI24&tiket=&regional=REG-4&kategori=grand_total',
-      'REG-4_SUGAR_HSI_GRAND_TOTAL',
-    );
-    await delay(20000);
+    // // ttr reseller
+    // await download(
+    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=RESELLER&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
+    // );
 
-    await download(
-      'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=HSI24&tiket=&regional=REG-5&kategori=bukan_gaul',
-      'REG-5_SUGAR_HSI_BUKAN_GAUL',
-    );
-    await delay(20000);
+    // // ttr indibiz
+    // await download(
+    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=INDIBIZ&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
+    // );
 
-    await download(
-      'https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TELKOMLAMA&enddate=2026-01-28&tahun=&bulan=&sumber=HSI24&tiket=&regional=REG-5&kategori=grand_total',
-      'REG-5_SUGAR_HSI_GRAND_TOTAL',
-    );
+    // // sugar HSI
+    // await download('https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TIF&enddate=2026-02-18&tahun=&bulan=&sumber=HSI24&tiket=&regional=TERRITORY3&kategori=grand_total');
+    // await delay(20000);
+
+    // // ttr sip trunk
+    // await download(
+    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailreport25?read=all&param_teritory=TIF&startdate=2026-02-01&enddate=2026-02-18&tahun=&bulan=&sumber=SIPTRUNK&tiket=TELKOMGAMAS&reportby=byreg&regional=TERRITORY3&kategori=',
+    // );
+    // await delay(20000);
+
+    // // ttr sip dwdm
+    // await download(
+    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailreport25?read=all&param_teritory=TIF&startdate=2026-02-01&enddate=2026-02-18&tahun=&bulan=&sumber=DWDM&tiket=TELKOMGAMAS&reportby=byreg&regional=TERRITORY3&kategori=',
+    // );
     await delay(20000);
   } catch (err) {
     console.error('❌ Error:', err.message);

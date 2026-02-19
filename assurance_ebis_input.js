@@ -49,7 +49,7 @@ function deleteUnwantedRows(table) {
 // 🔹 Fungsi untuk memasukkan data CSV ke database
 function inputDataToDatabase(file, insertToTable, jenis) {
   return new Promise((resolve, reject) => {
-    const filePath = path.join(__dirname, 'unspec_datin', `${file}.csv`);
+    const filePath = path.join(__dirname, 'loaded_file/unspec_datin', `${file}.csv`);
 
     const insertPromises = [];
 

@@ -7,8 +7,8 @@ async function main() {
   // --- Query pertama ---
   const connection = await mysql.createConnection({
     host: 'xxx.xxx.xxx.xxx',
-    user: 'xxxxxxxxx',
-    password: '#########',
+    user: 'xxxxxxxx',
+    password: '########',
     database: 'perf_tif',
   });
   const tgl = insertDate;
@@ -237,32 +237,6 @@ async function main() {
     dataRows = dataRows.map((row) => {
       let newRow;
       const lokasi_dis = ['D_BALI', 'D_MALANG', 'D_NUSRA', 'D_SEMARANG', 'D_SIDOARJO', 'D_SOLO', 'D_SURAMADU', 'D_YOGYAKARTA'];
-
-      // if (namaFile === 'tif.csv') {
-      //   if (row.lokasi === 'NUSA TENGGARA') {
-      //     newRow = { ...row, lokasi: 'D_NUSRA' };
-      //   } else if (row.lokasi?.includes('TERRITORY')) {
-      //     newRow = { ...row, lokasi: row.lokasi.replace('TERRITORY', 'TIF') };
-      //   } else {
-      //     newRow = { ...row, lokasi: `D_${row.lokasi}` };
-      //   }
-
-      //   if (lokasi_dis.includes(newRow.lokasi)) {
-      //     newRow = { ...newRow, Area: 'dis' };
-      //   }
-      // } else {
-      //   const region4 = ['KUDUS', 'MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SOLO', 'YOGYAKARTA'];
-      //   const nasional = ['REGIONAL 01', 'REGIONAL 02', 'REGIONAL 03', 'REGIONAL 04', 'REGIONAL 05', 'REGIONAL 06', 'REGIONAL 07'];
-
-      //   newRow = {
-      //     ...row,
-      //     Area: region4.includes(row.lokasi) ? 'reg4' : nasional.includes(row.lokasi) ? 'reg' : 'reg5',
-      //   };
-
-      //   if (row.lokasi.includes('SURABAYA')) {
-      //     newRow.lokasi = row.lokasi.replace('SURABAYA', 'SBY');
-      //   }
-      // }
 
       if (namaFile === 'tif.csv') {
         if (row.lokasi === 'NUSA TENGGARA') {

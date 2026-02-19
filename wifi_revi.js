@@ -97,7 +97,7 @@ const OUTPUT_DIR = path.join(__dirname, 'loaded_file/wifi_revi');
           }
         },
         inputSelector,
-        result
+        result,
       );
 
       async function getTable(fokus, fileName) {
@@ -225,7 +225,7 @@ const OUTPUT_DIR = path.join(__dirname, 'loaded_file/wifi_revi');
           }
         },
         inputSelector,
-        startdate
+        startdate,
       );
 
       // pilih enddate
@@ -247,7 +247,7 @@ const OUTPUT_DIR = path.join(__dirname, 'loaded_file/wifi_revi');
           }
         },
         endSelector,
-        enddate
+        enddate,
       );
 
       await tombol();

@@ -79,7 +79,10 @@ const { exec } = require('child_process');
     console.log('Berhasil login ke TelkomCare');
 
     async function datin(url, jenis) {
-      await page.goto(url, { waitUntil: 'networkidle0' });
+      await page.goto(url, {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000,
+      });
 
       async function dataDatin(parameter, fileName) {
         const regional = '#param_teritory';
@@ -96,7 +99,7 @@ const { exec } = require('child_process');
             }
           },
           regional,
-          option_regional
+          option_regional,
         );
 
         if (jenis.includes('sugar')) {
@@ -112,7 +115,7 @@ const { exec } = require('child_process');
               }
             },
             endSelector,
-            enddate_long_format
+            enddate_long_format,
           );
         } else {
           const startSelector = '#startdate';
@@ -129,7 +132,7 @@ const { exec } = require('child_process');
               }
             },
             startSelector,
-            startdate_long_format
+            startdate_long_format,
           );
           await page.evaluate(
             (sel, val) => {
@@ -141,7 +144,7 @@ const { exec } = require('child_process');
               }
             },
             endSelector,
-            enddate_long_format
+            enddate_long_format,
           );
         }
 
@@ -159,7 +162,7 @@ const { exec } = require('child_process');
               }
             },
             tiket,
-            option_tiket
+            option_tiket,
           );
         }
 
@@ -177,7 +180,7 @@ const { exec } = require('child_process');
               }
             },
             witel,
-            option_witel
+            option_witel,
           );
         }
 
@@ -195,7 +198,7 @@ const { exec } = require('child_process');
               .map((row) =>
                 Array.from(row.querySelectorAll('td,th'))
                   .map((col) => col.innerText.trim().replace(/,/g, ''))
-                  .join(',')
+                  .join(','),
               )
               .join('\n');
           });
@@ -206,7 +209,7 @@ const { exec } = require('child_process');
         }
       }
 
-      await dataDatin(1, `${jenis}_reg`);
+      // await dataDatin(1, `${jenis}_reg`);
       await page.waitForTimeout(2000);
       await dataDatin(3, `${jenis}_tif`);
     }
@@ -228,6 +231,6 @@ const { exec } = require('child_process');
   } catch (err) {
     console.error('Ada kesalahan:', err.message);
   } finally {
-    // await browser.close();
+    await browser.close();
   }
 })();
