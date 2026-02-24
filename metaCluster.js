@@ -161,7 +161,7 @@ bot.on('message', async (msg) => {
     });
 
     // Handle Captcha Khusus
-    const captchaTriggers = ['fulfillment', 'telkomcare', 'ps_re', 'unspec_datin', 'ttr_ffg_non_hsi'];
+    const captchaTriggers = ['assurance_ebis_running', 'fulfillment_running', 'ps_re_running', 'newexpro_running', 'telkomcare_running'];
     if (captchaTriggers.includes(command)) {
       setTimeout(() => {
         const captchaFile = path.join(process.cwd(), 'captcha/cpt.png');
