@@ -46,11 +46,11 @@ const path = require('path');
 
     await page.waitForTimeout(20000);
 
-    const pesan = await getCaptchaDB();
-    const captcha = pesan?.split(' ')[1];
-    if (!captcha) throw new Error('Captcha tidak ditemukan');
+    // const pesan = await getCaptchaDB();
+    // const captcha = pesan?.split(' ')[1];
+    // if (!captcha) throw new Error('Captcha tidak ditemukan');
 
-    await page.type('#captcha-input', captcha);
+    // await page.type('#captcha-input', captcha);
 
     if (await page.$('#agree')) {
       const checked = await page.$eval('#agree', (el) => el.checked);
@@ -78,98 +78,10 @@ const path = require('path');
 
     await page.waitForSelector('.page-container', { timeout: 60000 });
     console.log('✅ Login berhasil');
-
-    function uniqueName(base, ext = 'xlsx') {
-      const ts = new Date().toISOString().replace(/[:.]/g, '-');
-      return `${base}.${ext}`;
-    }
-
-    async function waitAndRename(dir, newName, timeout = 60000) {
-      const start = Date.now();
-
-      return new Promise((resolve, reject) => {
-        const interval = setInterval(() => {
-          const files = fs
-            .readdirSync(dir)
-            .filter((f) => !f.endsWith('.crdownload'))
-            .map((f) => ({
-              name: f,
-              time: fs.statSync(path.join(dir, f)).mtime.getTime(),
-            }))
-            .sort((a, b) => b.time - a.time);
-
-          if (files.length > 0) {
-            const oldPath = path.join(dir, files[0].name);
-            const newPath = path.join(dir, newName);
-
-            fs.renameSync(oldPath, newPath);
-            clearInterval(interval);
-            console.log(`✅ File disimpan: ${newName}`);
-            resolve();
-          }
-
-          if (Date.now() - start > timeout) {
-            clearInterval(interval);
-            reject(new Error('Download timeout'));
-          }
-        }, 1000);
-      });
-    }
-
-    function delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-    async function download(url, filename) {
-      await page.goto(url, {
-        waitUntil: 'domcontentloaded',
-        timeout: 60000,
-      });
-      const selector = 'body > div.page-container > div.page-content-wrapper > div.page-content > div:nth-child(4) > div > div > div > a';
-      await page.waitForSelector(selector, { visible: true, timeout: 60000 });
-      await delay(10000);
-      await page.click(selector);
-      // await waitAndRename(downloadPath, uniqueName(filename));
-    }
-
-    // ttr datin
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=DATIN24&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
-    // );
-    // await delay(20000);
-
-    // sugar Datin
-    await download('https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TIF&enddate=2026-02-18&tahun=&bulan=&sumber=DATIN24&tiket=&regional=TERRITORY3&kategori=grand_total');
-    await delay(20000);
-
-    // // ttr reseller
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=RESELLER&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
-    // );
-
-    // // ttr indibiz
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailrescomp25?read=all&param_teritory=TIF&tahun=&bulan=&sumber=INDIBIZ&tiket=TELKOMGAMAS&startdate=2026-02-01&enddate=2026-02-18&custpending=&regional=TERRITORY%203&kategori=&tcomp=',
-    // );
-
-    // // sugar HSI
-    // await download('https://telkomcare.telkom.co.id/assurance/lapebis25/detailsugar25?read=all&param_teritory=TIF&enddate=2026-02-18&tahun=&bulan=&sumber=HSI24&tiket=&regional=TERRITORY3&kategori=grand_total');
-    // await delay(20000);
-
-    // // ttr sip trunk
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailreport25?read=all&param_teritory=TIF&startdate=2026-02-01&enddate=2026-02-18&tahun=&bulan=&sumber=SIPTRUNK&tiket=TELKOMGAMAS&reportby=byreg&regional=TERRITORY3&kategori=',
-    // );
-    // await delay(20000);
-
-    // // ttr sip dwdm
-    // await download(
-    //   'https://telkomcare.telkom.co.id/assurance/lapebis25/detailreport25?read=all&param_teritory=TIF&startdate=2026-02-01&enddate=2026-02-18&tahun=&bulan=&sumber=DWDM&tiket=TELKOMGAMAS&reportby=byreg&regional=TERRITORY3&kategori=',
-    // );
-    await delay(20000);
   } catch (err) {
     console.error('❌ Error:', err.message);
   } finally {
     await page.waitForTimeout(15000);
-    await browser.close();
+    // await browser.close();
   }
 })();

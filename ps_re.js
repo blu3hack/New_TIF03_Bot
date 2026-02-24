@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const pool = require('./connection');
+const connection = require('./connection');
 const { user_care, pass_care } = require('./login');
 const fs = require('fs');
 const { startdate_long_format, enddate_long_format } = require('./currentDate');
@@ -23,14 +23,11 @@ const { exec } = require('child_process');
     }
 
     // mbil cpacha dari database
-    function getData() {
-      return new Promise((resolve, reject) => {
-        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
-        pool.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        });
-      });
+
+    async function getData() {
+      const query = `SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1`;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     await page.waitForSelector('#uname');
@@ -58,20 +55,14 @@ const { exec } = require('child_process');
     console.log('Mengambil OTP dari database...');
     await page.waitForTimeout(5000);
 
-    const getOtp = () => {
-      return new Promise((resolve, reject) => {
-        const query = 'SELECT otp FROM bot_message WHERE username_sender = "dashkapro_bot" ORDER BY created_at DESC LIMIT 1';
-        pool.query(query, (error, results) => {
-          if (error) {
-            return reject(error);
-          }
-          if (!results.length || !results[0].otp) {
-            return reject(new Error('Tidak ada OTP di database.'));
-          }
-          resolve(results[0].otp);
-        });
-      });
-    };
+    async function getOtp() {
+      const query = `SELECT otp FROM bot_message WHERE username_sender = "dashkapro_bot" ORDER BY created_at DESC LIMIT 1`;
+      const [rows] = await connection.execute(query);
+      if (!rows.length) {
+        throw new Error('OTP tidak ditemukan di database');
+      }
+      return rows[0].otp; // ⬅ ambil string saja
+    }
 
     try {
       const otp = await getOtp();
@@ -82,7 +73,7 @@ const { exec } = require('child_process');
     } catch (error) {
       console.error('Gagal mengambil OTP:', error.message);
     } finally {
-      pool.end(); // Tutup koneksi database
+      connection.end(); // Tutup koneksi database
     }
 
     console.log('Berhasil login ke KPRO');

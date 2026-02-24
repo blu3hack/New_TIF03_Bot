@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const pool = require('./connection');
+const connection = require('./connection');
 const { user_care, pass_care } = require('./login');
 const fs = require('fs');
 const { startdate_long_format, enddate_long_format } = require('./currentDate');
@@ -23,14 +23,10 @@ const { exec } = require('child_process');
     }
 
     // mbil cpacha dari database
-    function getData() {
-      return new Promise((resolve, reject) => {
-        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
-        pool.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        });
-      });
+    async function getData() {
+      const query = `SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1`;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     await page.waitForSelector('#uname');
@@ -79,10 +75,14 @@ const { exec } = require('child_process');
     console.log('Berhasil login ke TelkomCare');
 
     async function datin(url, jenis) {
-      await page.goto(url, {
-        waitUntil: 'domcontentloaded',
-        timeout: 60000,
-      });
+      try {
+        await page.goto(url, {
+          waitUntil: 'domcontentloaded',
+          timeout: 60000,
+        });
+      } catch (err) {
+        console.log('Gagal load:', err.message);
+      }
 
       async function dataDatin(parameter, fileName) {
         const regional = '#param_teritory';

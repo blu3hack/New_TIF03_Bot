@@ -5,12 +5,6 @@ const pool = require('./connection.js');
 
 async function main() {
   // --- Query pertama ---
-  const connection = await mysql.createConnection({
-    host: 'xxx.xxx.xxx.xxx',
-    user: 'xxxxxxxx',
-    password: '########',
-    database: 'perf_tif',
-  });
   const tgl = insertDate;
   const bulan = tgl.split('-')[1]; // "09"
   const bln = `m${bulan}`; // "${bln}"
@@ -37,7 +31,7 @@ async function main() {
     UNION ALL
     SELECT 'FFM-WHF-Fulfillment Guarantee Compliance' AS kpi, sc_lokasi.witel AS lokasi, ff_ih.jenis AS Area, ff_ih.ffg AS Realisasi FROM sc_lokasi LEFT JOIN ff_ih ON sc_lokasi.witel = ff_ih.lokasi AND ff_ih.tgl = '${tgl}' AND ff_ih.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
-    SELECT 'FFM-WHF-TTR Fulfillment Guarantee Compliance' AS kpi, sc_lokasi.witel AS lokasi, ttr_ffg_download.lokasi AS Area, ttr_ffg_download.realisasi AS Realisasi FROM sc_lokasi LEFT JOIN ttr_ffg_download ON sc_lokasi.witel = ttr_ffg_download.area AND ttr_ffg_download.tgl = '${tgl}' AND ttr_ffg_download.lokasi IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
+    SELECT 'FFM-WHF-TTR Fulfillment Guarantee Compliance' AS kpi, sc_lokasi.witel AS lokasi, ff_ih.jenis AS Area, ff_ih.ttr_ffg AS Realisasi FROM sc_lokasi LEFT JOIN ff_ih ON sc_lokasi.witel = ff_ih.lokasi AND ff_ih.tgl = '${tgl}' AND ff_ih.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'ASR-ENT-TTR Compliance K1 DATIN 1.5 Jam' AS kpi, sc_lokasi.witel AS lokasi, ttr_datin.jenis AS Area, ttr_datin.k1 AS Realisasi FROM sc_lokasi LEFT JOIN ttr_datin ON sc_lokasi.witel = ttr_datin.treg AND ttr_datin.tgl = '${tgl}' AND ttr_datin.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
@@ -224,8 +218,8 @@ async function main() {
       SELECT 'ASR-WHM-MTTRi Premium Site Compliance' AS kpi, sc_lokasi.witel AS lokasi, mttr_mso.jenis AS Area, mttr_mso.premium AS Realisasi FROM sc_lokasi LEFT JOIN mttr_mso ON sc_lokasi.witel = mttr_mso.regional AND mttr_mso.tgl = '${tgl}' AND mttr_mso.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND mttr_mso.premium IS NOT NULL
   `;
 
-  const [tif] = await connection.execute(sqltif);
-  const [ccm] = await connection.execute(sqlccm);
+  const [tif] = await pool.execute(sqltif);
+  const [ccm] = await pool.execute(sqlccm);
 
   function simpanCSV(dataRows, namaFile) {
     if (dataRows.length === 0) {
@@ -333,7 +327,7 @@ async function main() {
   // Contoh pemakaian
   simpanCSV(tif, 'tif.csv');
   simpanCSV(ccm, 'ccm.csv');
-  await connection.end();
+  await pool.end();
 }
 
 main().catch(console.error);

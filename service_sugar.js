@@ -59,20 +59,37 @@ const { periode_long_format } = require('./currentDate');
   await page.waitForTimeout(3000);
 
   async function insertOTP() {
-    const code_otp = String(await getCaptchaFromDatabase()).padStart(6, '0');
+    const code_otp = await getCaptchaFromDatabase();
+    const code1 = Math.floor(code_otp / 100000) % 10;
+    const code2 = Math.floor(code_otp / 10000) % 10;
+    const code3 = Math.floor(code_otp / 1000) % 10;
+    const code4 = Math.floor(code_otp / 100) % 10;
+    const code5 = Math.floor(code_otp / 10) % 10;
+    const code6 = code_otp % 10;
 
-    console.log('OTP:', code_otp.split('').join(' '));
+    console.log(code1, code2, code3, code4, code5, code6);
 
-    // fokus ke input pertama
-    await page.waitForSelector('#gg_otp input.sscrt', { visible: true });
-    await page.click('#gg_otp input.sscrt');
+    await page.type('#gg_otp > div > input.sscrt.scrt-1', code1.toString());
+    await page.waitForTimeout(300);
 
-    for (const digit of code_otp) {
-      await page.keyboard.type(digit, { delay: 120 });
-    }
+    await page.type('#gg_otp > div > input.sscrt.scrt-2', code2.toString());
+    await page.waitForTimeout(300);
 
+    await page.type('#gg_otp > div > input.sscrt.scrt-3', code3.toString());
+    await page.waitForTimeout(300);
+
+    await page.type('#gg_otp > div > input.sscrt.scrt-4', code4.toString());
+    await page.waitForTimeout(300);
+
+    await page.type('#gg_otp > div > input.sscrt.scrt-5', code5.toString());
+    await page.waitForTimeout(300);
+
+    await page.type('#gg_otp > div > input.sscrt.scrt-6', code6.toString());
+    await page.waitForTimeout(300);
+
+    // Klik tombol login
     await page.click('#gg_otp > input.btn.btn-primary.mb-3');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await page.waitForNavigation();
   }
 
   await insertOTP();
@@ -106,6 +123,11 @@ const { periode_long_format } = require('./currentDate');
       await page.evaluate(() => {
         [...document.querySelectorAll('a.btn.wrn-gradasi')].find((el) => el.textContent.trim() === 'Filter')?.click();
       });
+
+      // Pilih Tahun
+      await page.waitForSelector('#periodeValue', { visible: true, timeout: 10000 });
+      await page.select('#periodeValue', await page.$eval(`#periodeValue > option:nth-child(1)`, (el) => el.value));
+      await page.waitForTimeout(2000);
 
       // Pilih Company -> TIF
       await page.waitForSelector('#company', { visible: true, timeout: 10000 });
@@ -175,6 +197,11 @@ const { periode_long_format } = require('./currentDate');
       await page.evaluate(() => {
         [...document.querySelectorAll('a.btn.wrn-gradasi')].find((el) => el.textContent.trim() === 'Filter')?.click();
       });
+
+      // Pilih Tahun
+      await page.waitForSelector('#periodeValue', { visible: true, timeout: 10000 });
+      await page.select('#periodeValue', await page.$eval(`#periodeValue > option:nth-child(1)`, (el) => el.value));
+      await page.waitForTimeout(2000);
 
       // Pilih Company -> TIF
       await page.waitForSelector('#company', { visible: true, timeout: 10000 });
@@ -251,5 +278,5 @@ const { periode_long_format } = require('./currentDate');
       ]);
     }
   }
-  // await browser.close();
+  await browser.close();
 })();

@@ -1,42 +1,36 @@
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const connection = require('./connection');
+const pool = require('./connection');
 const { insertDate } = require('./currentDate');
 
-// Helper promise query
-function queryAsync(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    connection.query(sql, params, (err, results) => {
-      if (err) return reject(err);
-      resolve(results);
-    });
-  });
-}
-
-// ✅ Hapus data dengan tanggal hari ini (benar-benar menunggu selesai)
+// ================= DELETE DATA HARI INI =================
 async function deleteExistingData() {
-  const currentDate = insertDate;
-  await queryAsync(`DELETE FROM ps_re WHERE tgl = ?`, [currentDate]);
-  console.log('Data lama berhasil dihapus');
+  const sql = `DELETE FROM ps_re WHERE tgl = ?`;
+  await pool.execute(sql, [insertDate]);
 }
 
-// ✅ Hapus baris TOTAL atau kosong (menunggu selesai)
-async function deleteUnwantedRows(table) {
-  const deleteWitelValues = ['TOTAL', '', '(CANCEL+FALLOUT)', 'GROSS', 'NETT', 'Table 2', 'TERRITORY'];
+// ================= DELETE ROW TIDAK DIPERLUKAN =================
+async function deleteUnwantedRows() {
+  const deleteValues = ['TOTAL', '', '(CANCEL+FALLOUT)', 'GROSS', 'NETT', 'Table 2', 'TERRITORY'];
 
-  for (const value of deleteWitelValues) {
-    await queryAsync(`DELETE FROM ${table} WHERE lokasi = ?`, [value]);
-  }
+  const placeholders = deleteValues.map(() => '?').join(',');
+
+  const sql = `
+    DELETE FROM ps_re
+    WHERE tgl = ?
+    AND lokasi IN (${placeholders})
+  `;
+
+  await pool.execute(sql, [insertDate, ...deleteValues]);
 }
 
-// ✅ Baca CSV dan insert ke database (menunggu semua insert selesai)
-function inputDataToDatabase(file, area, insertToTable) {
+// ================= INPUT CSV =================
+function inputDataToDatabase(file, area) {
   return new Promise((resolve, reject) => {
     const filePath = path.join(__dirname, 'loaded_file/ps_re', `${file}.csv`);
-    const currentDate = insertDate;
 
-    const insertPromises = [];
+    const rowsToInsert = [];
 
     fs.createReadStream(filePath)
       .pipe(csv())
@@ -66,19 +60,20 @@ function inputDataToDatabase(file, area, insertToTable) {
 
         const psre = data[Object.keys(data)[6]] || '';
 
-        const query = `
-          INSERT INTO ${insertToTable}
-          (lokasi, area, psre, tgl)
-          VALUES (?, ?, ?, ?)
-        `;
-
-        insertPromises.push(queryAsync(query, [witel, area, psre, currentDate]));
+        rowsToInsert.push([witel, area, psre, insertDate]);
       })
       .on('end', async () => {
         try {
-          await Promise.all(insertPromises); // tunggu semua insert
-          await deleteUnwantedRows(insertToTable); // tunggu delete
-          console.log(`${file} berhasil diinput ke tabel ${insertToTable}`);
+          if (rowsToInsert.length > 0) {
+            const sql = `
+              INSERT INTO ps_re (lokasi, area, psre, tgl)
+              VALUES ?
+            `;
+
+            await pool.query(sql, [rowsToInsert]); // bulk insert (lebih cepat & aman)
+          }
+
+          console.log(`${file} berhasil diinput ke ps_re`);
           resolve();
         } catch (err) {
           reject(err);
@@ -88,79 +83,66 @@ function inputDataToDatabase(file, area, insertToTable) {
   });
 }
 
-async function ps_re() {
-  const currentDate = insertDate;
-
+// ================= HITUNG AREA CCM =================
+async function insertAreaCCM() {
   const sql = `
     INSERT INTO ps_re (lokasi, area, psre, tgl)
 
-    SELECT
-      'BALI NUSRA',
-      'area_ccm',
-      ROUND(AVG(NULLIF(psre, '-')), 2),
-      tgl
+    SELECT 'BALI NUSRA','area_ccm',
+    ROUND(AVG(NULLIF(psre, '-')), 2), tgl
     FROM ps_re
-    WHERE tgl = ?
-      AND area = 'reg'
-      AND lokasi IN ('DENPASAR', 'SINGARAJA', 'NTB', 'NTT')
+    WHERE tgl = ? AND area = 'reg'
+    AND lokasi IN ('DENPASAR','SINGARAJA','NTB','NTT')
     GROUP BY tgl
 
     UNION ALL
 
-    SELECT
-      'JAWA TIMUR',
-      'area_ccm',
-      ROUND(AVG(NULLIF(psre, '-')), 2),
-      tgl
+    SELECT 'JAWA TIMUR','area_ccm',
+    ROUND(AVG(NULLIF(psre, '-')), 2), tgl
     FROM ps_re
-    WHERE tgl = ?
-      AND area = 'reg'
-      AND lokasi IN (
-        'MADIUN','MALANG','JEMBER','SIDOARJO',
-        'SURABAYA SELATAN','SURABAYA UTARA',
-        'MADURA','PASURUAN'
-      )
+    WHERE tgl = ? AND area = 'reg'
+    AND lokasi IN (
+      'MADIUN','MALANG','JEMBER','SIDOARJO',
+      'SURABAYA SELATAN','SURABAYA UTARA',
+      'MADURA','PASURUAN'
+    )
     GROUP BY tgl
 
     UNION ALL
 
-    SELECT
-      'JATENG DIY',
-      'area_ccm',
-      ROUND(AVG(NULLIF(psre, '-')), 2),
-      tgl
+    SELECT 'JATENG DIY','area_ccm',
+    ROUND(AVG(NULLIF(psre, '-')), 2), tgl
     FROM ps_re
-    WHERE tgl = ?
-      AND area = 'reg'
-      AND lokasi IN (
-        'KUDUS','MAGELANG','PEKALONGAN',
-        'PURWOKERTO','SEMARANG','SOLO','YOGYAKARTA'
-      )
+    WHERE tgl = ? AND area = 'reg'
+    AND lokasi IN (
+      'KUDUS','MAGELANG','PEKALONGAN',
+      'PURWOKERTO','SEMARANG','SOLO','YOGYAKARTA'
+    )
     GROUP BY tgl
   `;
 
-  try {
-    await queryAsync(sql, [currentDate, currentDate, currentDate]);
-    console.log('Insert ke table ps re berhasil:');
-  } catch (err) {
-    console.error('Error insert ps re:', err);
-  }
+  await pool.execute(sql, [insertDate, insertDate, insertDate]);
+
+  console.log('Insert area_ccm berhasil');
 }
 
-// ✅ MAIN
+// ================= MAIN =================
 async function run() {
   try {
     await deleteExistingData();
 
-    await inputDataToDatabase('ps_re_tif', 'tif', 'ps_re');
-    await inputDataToDatabase('ps_re_reg', 'reg', 'ps_re');
-    await ps_re(); // tunggu proses ps_re selesai
+    await inputDataToDatabase('ps_re_tif', 'tif');
+    await inputDataToDatabase('ps_re_reg', 'reg');
+
+    await deleteUnwantedRows();
+
+    await insertAreaCCM();
 
     console.log('SEMUA FILE BERHASIL DIPROSES ✅');
   } catch (err) {
     console.error('Error during data processing:', err);
   } finally {
-    connection.end(); // sekarang aman karena semua sudah selesai
+    await pool.end(); // tutup pool dengan benar
   }
 }
 

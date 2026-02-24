@@ -13,7 +13,7 @@ const { exec } = require('child_process');
   const page = await browser.newPage();
 
   // ================= SET FOLDER DOWNLOAD =================
-  const downloadPath = 'D:\\SCRAPPERS\\Scrapper\\loaded_file\\mttr_mso';
+  const downloadPath = 'D:\\Scrappers\\Scrapper\\loaded_file\\mttr_mso';
 
   const client = await page.target().createCDPSession();
   await client.send('Page.setDownloadBehavior', {
@@ -53,12 +53,12 @@ const { exec } = require('child_process');
       waitUntil: 'networkidle2',
     });
 
-    await page.waitForSelector('#exportAllTicketXls', { visible: true });
-    await page.click('#exportAllTicketXls');
+    await page.waitForSelector('#exportAllTicketCsv', { visible: true });
+    await page.click('#exportAllTicketCsv');
 
-    console.log('📥 Download dimulai ke:', downloadPath);
+    console.log('?? Download dimulai ke:', downloadPath);
   } catch (err) {
-    console.error('❌ Ada kesalahan:', err.message);
+    console.error('? Ada kesalahan:', err.message);
   } finally {
     await page.waitForTimeout(20000);
     await browser.close();

@@ -1,14 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const pool = require('./connection'); // gunakan pool dari connection.js
+const pool = require('./connection'); // pakai pool
 const { insertDate } = require('./currentDate');
 
 /* =========================================
-   HAPUS DATA LAMA BERDASARKAN TANGGAL
+   HAPUS DATA TANGGAL HARI INI
 ========================================= */
 async function deleteExistingData() {
-  const tables = ['ffg_non_hsi', 'ttr_ffg_non_hsi', 'ttd_non_hsi', 'ttd_wifi'];
+  const tables = ['provcomp', 'provcomp_wifi'];
 
   for (const table of tables) {
     const sql = `DELETE FROM ${table} WHERE tgl = ?`;
@@ -34,7 +34,6 @@ async function deleteUnwantedRows(table) {
 ========================================= */
 async function inputDataToDatabase(file, insertToTable, jenis) {
   const filePath = path.join(__dirname, 'loaded_file/ff_non_hsi', `${file}.csv`);
-
   const insertPromises = [];
 
   return new Promise((resolve, reject) => {
@@ -44,21 +43,7 @@ async function inputDataToDatabase(file, insertToTable, jenis) {
       .on('data', (data) => {
         const tgl = insertDate;
         const witel = data[Object.keys(data)[0]] || '';
-
-        let real = '';
-
-        if (insertToTable === 'ttd_non_hsi' || insertToTable === 'ttd_wifi') {
-          real = data[Object.keys(data)[4]] || '';
-        } else {
-          const avg = data[Object.keys(data)[1]] || '';
-          const jml = data[Object.keys(data)[2]] || '';
-
-          if (avg == 0 || jml == 0) {
-            real = 100;
-          } else {
-            real = data[Object.keys(data)[3]] || '';
-          }
-        }
+        const real = data[Object.keys(data)[5]] || '';
 
         let newWitel = '';
 
@@ -83,7 +68,6 @@ async function inputDataToDatabase(file, insertToTable, jenis) {
         try {
           await Promise.all(insertPromises);
           await deleteUnwantedRows(insertToTable);
-
           console.log(`✅ ${file} berhasil diinput ke tabel ${insertToTable}`);
           resolve();
         } catch (err) {
@@ -95,9 +79,6 @@ async function inputDataToDatabase(file, insertToTable, jenis) {
   });
 }
 
-/* =========================================
-   INSERT AREA CCM
-========================================= */
 async function insert_data_ccm(table) {
   const sql = `
     INSERT INTO ${table} (tgl, jenis, regional, comply)
@@ -170,43 +151,28 @@ async function run() {
     await deleteExistingData();
 
     const files = [
-      ['ffg_tif', 'ffg_non_hsi', 'tif'],
-      ['ffg_district', 'ffg_non_hsi', 'tif'],
-      ['ffg_reg', 'ffg_non_hsi', 'reg'],
-      ['ffg_reg4', 'ffg_non_hsi', 'reg'],
-      ['ffg_reg5', 'ffg_non_hsi', 'reg'],
+      ['provcomp_tif', 'provcomp', 'tif'],
+      ['provcomp_district', 'provcomp', 'tif'],
+      ['provcomp_reg', 'provcomp', 'reg'],
+      ['provcomp_reg4', 'provcomp', 'reg'],
+      ['provcomp_reg5', 'provcomp', 'reg'],
 
-      ['ttr_ffg_tif', 'ttr_ffg_non_hsi', 'tif'],
-      ['ttr_ffg_district', 'ttr_ffg_non_hsi', 'tif'],
-      ['ttr_ffg_reg', 'ttr_ffg_non_hsi', 'reg'],
-      ['ttr_ffg_reg4', 'ttr_ffg_non_hsi', 'reg'],
-      ['ttr_ffg_reg5', 'ttr_ffg_non_hsi', 'reg'],
-
-      ['ttdc_tif', 'ttd_non_hsi', 'tif'],
-      ['ttdc_district', 'ttd_non_hsi', 'tif'],
-      ['ttdc_reg', 'ttd_non_hsi', 'reg'],
-      ['ttdc_reg4', 'ttd_non_hsi', 'reg'],
-      ['ttdc_reg5', 'ttd_non_hsi', 'reg'],
-
-      ['ttdc_wifi_tif', 'ttd_wifi', 'tif'],
-      ['ttdc_wifi_district', 'ttd_wifi', 'tif'],
-      ['ttdc_wifi_reg', 'ttd_wifi', 'reg'],
-      ['ttdc_wifi_reg4', 'ttd_wifi', 'reg'],
-      ['ttdc_wifi_reg5', 'ttd_wifi', 'reg'],
+      ['provcomp_wifi_tif', 'provcomp_wifi', 'tif'],
+      ['provcomp_wifi_district', 'provcomp_wifi', 'tif'],
+      ['provcomp_wifi_reg', 'provcomp_wifi', 'reg'],
+      ['provcomp_wifi_reg4', 'provcomp_wifi', 'reg'],
+      ['provcomp_wifi_reg5', 'provcomp_wifi', 'reg'],
     ];
 
     for (const [file, table, jenis] of files) {
       await inputDataToDatabase(file, table, jenis);
     }
-
-    await insert_data_ccm('ttd_non_hsi');
-    await insert_data_ccm('ttd_wifi');
-    await insert_data_ccm('ttr_ffg_non_hsi');
-    await insert_data_ccm('ffg_non_hsi');
+    await insert_data_ccm('provcomp');
+    await insert_data_ccm('provcomp_wifi');
 
     console.log('🎉 SEMUA FILE BERHASIL DIPROSES');
   } catch (err) {
-    console.error('❌ Error during data processing:', err);
+    console.error('❌ Error during processing:', err);
   } finally {
     await pool.end(); // tutup pool dengan benar
   }

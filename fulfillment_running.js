@@ -27,8 +27,9 @@ async function main() {
   console.log('Melakukan Proses Loaded filedata ke dalam Database');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
 
-  await runCommand('node', ['newexpro_input'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
-  await runCommand('node', ['newexpro_input_provcomp'], '\n========= Proses load data NewExpro =========', 5000);
+  await runCommand('node', ['fulfillment'], '\n========= Proses Pengambilan data di Fulfillment Dashboard via BOT =========', 5000);
+  await runCommand('node', ['fulfillment_loaddata'], '\n========= Proses load data FUlfillment =========', 5000);
+  await runCommand('node', ['fulfillment_input'], '\n========= Proses Input data Fulfillment =========', 5000);
 
   console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik

@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const connection = require('./connection');
-const { user_care, pass_care } = require('./login');
+const { user_aribi, pass_aribi } = require('./login');
 const { exec } = require('child_process');
 const fs = require('fs');
 
@@ -23,19 +23,21 @@ const fs = require('fs');
     }
 
     // // mbil cpacha dari database
-    function getData() {
-      return new Promise((resolve, reject) => {
-        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
-        connection.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        });
-      });
+    async function getData() {
+      const query = `
+        SELECT pesan 
+        FROM get_otp_for_download 
+        WHERE pesan LIKE '%cpt%' 
+        ORDER BY id DESC 
+        LIMIT 1
+      `;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     // Isi formulir login
-    await page.type('[placeholder="Username"]', user_care);
-    await page.type('[placeholder="Password"]', pass_care);
+    await page.type('[placeholder="Username"]', user_aribi);
+    await page.type('[placeholder="Password"]', pass_aribi);
 
     // input captcha
     await page.waitForTimeout(20000);
@@ -474,10 +476,10 @@ const fs = require('fs');
     }
 
     await unspec_datin();
-    await q_datin();
     await q_hsi();
     await sqm_datin();
     await ttr();
+    await q_datin();
   } catch (error) {
     console.error('Terjadi kesalahan:', error.message);
   } finally {

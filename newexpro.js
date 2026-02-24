@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const pool = require('./connection');
+const connection = require('./connection');
 const { user, pass } = require('./login');
 const fs = require('fs');
 const { periode_long_format, enddate_long_format, periode_end_format } = require('./currentDate');
@@ -21,14 +21,10 @@ const { exec } = require('child_process');
     }
 
     // mbil cpacha dari database
-    function getData() {
-      return new Promise((resolve, reject) => {
-        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
-        pool.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        });
-      });
+    async function getData() {
+      const query = `SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1`;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     // Login

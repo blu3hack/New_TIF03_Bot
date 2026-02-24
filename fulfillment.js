@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer');
 const connection = require('./connection');
-// const connection = require('./db');
 const { user_care, pass_care } = require('./login');
 const { periode_short_format, startdate_short_format, enddate_short_format } = require('./currentDate');
 const { get } = require('request-promise-native');
+const fs = require('fs');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: false });
@@ -24,14 +24,17 @@ const { get } = require('request-promise-native');
     }
 
     // // mbil cpacha dari database
-    function getData() {
-      return new Promise((resolve, reject) => {
-        const query = "SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1";
-        connection.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        });
-      });
+
+    async function getData() {
+      const query = `
+        SELECT pesan 
+        FROM get_otp_for_download 
+        WHERE pesan LIKE '%cpt%' 
+        ORDER BY id DESC 
+        LIMIT 1
+      `;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     // Isi formulir login
@@ -67,20 +70,23 @@ const { get } = require('request-promise-native');
     console.log('Mengambil OTP dari database...');
     await page.waitForTimeout(5000);
 
-    const getOtp = () => {
-      return new Promise((resolve, reject) => {
-        const query = 'SELECT otp FROM bot_message WHERE username_sender = "DashboardVerificationBot" ORDER BY created_at DESC LIMIT 1';
-        connection.query(query, (error, results) => {
-          if (error) {
-            return reject(error);
-          }
-          if (!results.length || !results[0].otp) {
-            return reject(new Error('Tidak ada OTP di database.'));
-          }
-          resolve(results[0].otp);
-        });
-      });
-    };
+    async function getOtp() {
+      const query = `
+        SELECT otp 
+        FROM bot_message 
+        WHERE username_sender = "DashboardVerificationBot" 
+        ORDER BY created_at DESC 
+        LIMIT 1
+      `;
+
+      const [rows] = await connection.query(query);
+
+      if (!rows.length || !rows[0].otp) {
+        throw new Error('Tidak ada OTP di database.');
+      }
+
+      return rows[0].otp;
+    }
 
     try {
       const otp = await getOtp();
@@ -129,25 +135,26 @@ const { get } = require('request-promise-native');
         await page.waitForSelector('#form > div > div > div.form-group.col-md-1 > button');
 
         async function ambil_data_wsa_ff() {
-          const selector_reg = ['#table_lokasi'];
+          // Tunggu sampai minimal 1 baris muncul
+          await page.waitForFunction(
+            () => {
+              const rows = document.querySelectorAll('#table_lokasi tbody tr');
+              return rows.length > 0;
+            },
+            { timeout: 300000 },
+          ); // 5 menit (lebih aman dari infinite)
 
-          for (i = 0; i < selector_reg.length; i++) {
-            await page.waitForSelector(selector_reg[i]);
-            await page.click(selector_reg[i]);
-          }
+          console.log('Tabel sudah muncul & memiliki data');
 
-          // ambil data dari table
-          await page.waitForSelector('#table_lokasi', { timeout: 0 });
           const wsa_ful = await page.evaluate(() => {
-            const table = document.querySelector('#table_lokasi > tbody');
-            const rows = Array.from(table.querySelectorAll('tr'));
+            const rows = Array.from(document.querySelectorAll('#table_lokasi tbody tr'));
+
             return rows
               .map((row) => {
                 const columns = Array.from(row.querySelectorAll('td, th'));
                 return columns
                   .map((column) => {
                     let cellValue = column.innerText.trim();
-                    // Mengganti koma dengan string kosong
                     if (cellValue.includes(',')) {
                       cellValue = cellValue.replace(/,/g, '');
                     }
@@ -157,6 +164,7 @@ const { get } = require('request-promise-native');
               })
               .join('\n');
           });
+
           fs.writeFileSync(`loaded_file/wsa/${fileName}.csv`, wsa_ful);
           console.log(`${fileName} berhasil didownload \n`);
         }
@@ -167,8 +175,6 @@ const { get } = require('request-promise-native');
       await fulfillment_data('wsa_fulfillment_tif');
       console.log('Proses Pengambilan WSA Fulfillment TIF Selesai');
     }
-
-    const fs = require('fs');
 
     async function wsa_fulfillment_hsi(page) {
       console.log('sudah masuk >> wsa fulfillment HSI');

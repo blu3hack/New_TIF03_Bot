@@ -1,71 +1,58 @@
 const fs = require('fs');
-const mysql = require('mysql2');
 const pool = require('./connection');
 const { insertDate } = require('./currentDate.js');
 
-// Fungsi untuk menghapus data lama berdasarkan tanggal dan uic
-function deleteOldData(table) {
-  return new Promise((resolve, reject) => {
-    const deleteQuery = `
-      DELETE FROM ${table} 
-      WHERE REPLACE(uic, CHAR(13), '') = 'operasional' 
-        AND insert_at = ?
-    `;
+// Hapus data lama
+async function deleteOldData(table) {
+  const deleteQuery = `
+    DELETE FROM ${table}
+    WHERE REPLACE(uic, CHAR(13), '') = 'operasional'
+      AND insert_at = ?
+  `;
 
-    pool.query(deleteQuery, [insertDate], (err, results) => {
-      if (err) {
-        console.error('⚠️ Gagal menghapus data lama:', err);
-        return reject(err);
-      }
+  const [results] = await pool.query(deleteQuery, [insertDate]);
 
-      console.log(`🗑️ Data lama berhasil dihapus (${results.affectedRows} baris) untuk insert_at = ${insertDate}`);
-      resolve();
-    });
-  });
+  console.log(`🗑️ Data lama berhasil dihapus (${results.affectedRows} baris) untuk insert_at = ${insertDate}`);
 }
 
-// Fungsi untuk mengimpor CSV ke database
-function loadCSV(filename, table) {
-  return new Promise((resolve, reject) => {
-    const csvPath = `D:/SCRAPPERS/Scrapper/loaded_file/msa_upload/${filename}`;
+// Import CSV
+async function loadCSV(filename, table) {
+  const csvPath = `D:/SCRAPPERS/Scrapper/loaded_file/msa_upload/${filename}`;
 
-    const loadQuery = `
-      LOAD DATA LOCAL INFILE ?
-      INTO TABLE ${table}
-      FIELDS TERMINATED BY ',' 
-      ENCLOSED BY '"'
-      LINES TERMINATED BY '\n'
-      IGNORE 1 ROWS
-      (kpi, lokasi, Area, Realisasi, insert_at, bulan, uic)
-    `;
+  if (!fs.existsSync(csvPath)) {
+    throw new Error(`File tidak ditemukan: ${csvPath}`);
+  }
 
-    pool.query(
-      {
-        sql: loadQuery,
-        values: [csvPath],
-        infileStreamFactory: () => fs.createReadStream(csvPath),
-      },
-      (err, results) => {
-        if (err) {
-          console.error(`⚠️ Gagal mengimpor ${filename}:`, err);
-          return reject(err);
-        }
-        console.log(`✅ Impor CSV ${filename} berhasil:`, results.affectedRows);
-        resolve();
-      },
-    );
+  const loadQuery = `
+    LOAD DATA LOCAL INFILE ?
+    INTO TABLE ${table}
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\\n'
+    IGNORE 1 ROWS
+    (kpi, lokasi, Area, Realisasi, insert_at, bulan, uic)
+  `;
+
+  const [results] = await pool.query({
+    sql: loadQuery,
+    values: [csvPath],
+    infileStreamFactory: () => fs.createReadStream(csvPath),
   });
+
+  console.log(`✅ Impor CSV ${filename} berhasil: ${results.affectedRows} baris`);
 }
 
-// Fungsi utama
+// Main
 async function run() {
   try {
-    await deleteOldData('wisa_upload_operational'); // Hapus data lama dulu
+    await deleteOldData('wisa_upload_operational');
+
     await loadCSV('tif.csv', 'wisa_upload_operational');
-    // await loadCSV('district.csv', 'wisa_upload_operational');
     await loadCSV('ccm.csv', 'wisa_upload_operational');
+
+    console.log('🎉 Semua proses selesai.');
   } catch (err) {
-    console.error(err);
+    console.error('❌ Terjadi kesalahan:', err.message);
   } finally {
     await pool.end();
   }

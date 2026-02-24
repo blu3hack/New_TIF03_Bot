@@ -24,13 +24,11 @@ function runCommand(cmd, args = [], label = '', delay = 0) {
 }
 
 async function main() {
-  console.log('Melakukan Proses Loaded filedata ke dalam Database');
+  console.log('Melakukan Proses Pengolahan data MTTR MSO');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
-
-  await runCommand('node', ['newexpro_input'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
-  await runCommand('node', ['newexpro_input_provcomp'], '\n========= Proses load data NewExpro =========', 5000);
-
-  console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
+  await runCommand('node', ['simarvel'], '\n========= Proses Download data si marvel =========', 5000);
+  await runCommand('node', ['simarvel_loaddata'], '\n========= Proses load data simarvel =========', 5000);
+  await runCommand('node', ['simarvel_input'], '\n========= Proses input data simarvel =========', 5000);
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik
 }
 
