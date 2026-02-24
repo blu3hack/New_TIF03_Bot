@@ -3,7 +3,7 @@ const { insertDate } = require('./currentDate');
 
 // Fungsi hapus data berdasarkan tanggal hari ini
 async function deleteExistingData() {
-  const tableForDelete = ['unspec_datin', 'unspec_hsi', 'q_datin', 'q_hsi', 'sqm_datin', 'sqm_hsi'];
+  const tableForDelete = ['unspec_datin', 'unspec_hsi', 'q_datin', 'q_hsi', 'sqm_datin', 'sqm_hsi', 'ttr_non_numbering'];
 
   const currentDate = insertDate;
   const jenis_for_delete = ['area_ccm'];
@@ -114,6 +114,7 @@ async function main() {
     await insert_ccm_group1('unspec_hsi');
     await insert_ccm_group1('q_datin');
     await insert_ccm_group1('q_hsi');
+    await insert_ccm_group1('ttr_non_numbering');
     console.log('🏁 Semua proses aggregasi Area CCM selesai.');
   } catch (err) {
     console.error('💥 Error Fatal di Main:', err.message);

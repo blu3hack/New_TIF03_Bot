@@ -3,7 +3,7 @@ const { insertDate } = require('./currentDate');
 
 // ================= DELETE DATA =================
 async function deleteExistingData() {
-  const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller'];
+  const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller', 'ttr_siptrunk'];
   const jenisForDelete = ['balnus_ccm', 'jateng_ccm', 'jatim_ccm', 'area_ccm'];
   const inPlaceholders = jenisForDelete.map(() => '?').join(',');
 
@@ -191,8 +191,9 @@ async function ttr_indibiz() {
     GROUP BY
       rcm.region
   `;
+
   await connection.execute(sql, [insertDate, insertDate]);
-  console.log('✅ Insert ke ttr_indibiz berhasil');
+  console.log('✅ Insert ke ttr_reseller berhasil');
 }
 
 // ================= TTR RESELLER =================
@@ -244,6 +245,74 @@ async function ttr_reseller() {
   console.log('✅ Insert ke ttr_reseller berhasil');
 }
 
+async function ttr_siptrunk() {
+  const sql = `
+    INSERT INTO ttr_siptrunk (jenis, treg, tgl, target, \`real\`, ach)
+
+    SELECT
+      'area_ccm' as jenis,
+      rcm.region as treg,
+      ? as tgl,
+      10 as target,
+      CASE 
+        WHEN AVG(hs.TTR_E2E) IS NULL THEN '-'
+        ELSE ROUND(AVG(hs.TTR_E2E), 2)
+      END AS realisasi,
+      
+      CASE 
+        WHEN AVG(hs.TTR_E2E) IS NULL 
+        THEN 100
+        ELSE ROUND(
+              CASE 
+                WHEN (10 / AVG(hs.TTR_E2E)) > 1 
+                THEN 100 
+                ELSE (10 / AVG(hs.TTR_E2E) * 100)
+              END
+            ,2)
+      END AS ach
+      
+    FROM
+      region_ccm rcm
+    LEFT JOIN helper_siptrunk hs ON hs.WORKZONE = rcm.sto
+    GROUP BY rcm.region
+
+    UNION ALL 
+
+    SELECT
+      rsb.area as jenis,
+      rcm.branch as treg,
+      ? as tgl,
+      10 as target,
+      CASE 
+        WHEN AVG(hs.TTR_E2E) IS NULL THEN '-'
+        ELSE ROUND(AVG(hs.TTR_E2E), 2)
+      END AS realisasi,
+      
+      CASE 
+        WHEN AVG(hs.TTR_E2E) IS NULL 
+        THEN 100
+        ELSE ROUND(
+              CASE 
+                WHEN (10 / AVG(hs.TTR_E2E)) > 1 
+                THEN 100 
+                ELSE (10 / AVG(hs.TTR_E2E) * 100)
+              END
+            ,2)
+      END AS ach
+    FROM
+      region_ccm rcm
+    LEFT JOIN helper_siptrunk hs ON hs.WORKZONE = rcm.sto
+    LEFT JOIN region_sub_branch rsb ON rsb.lokasi = rcm.branch
+    GROUP BY rcm.branch
+
+    ORDER BY jenis,treg
+
+  `;
+
+  await connection.execute(sql, [insertDate, insertDate]);
+  console.log('✅ Insert ke ttr_siptrunk berhasil');
+}
+
 // ================= MAIN =================
 async function main() {
   try {
@@ -253,6 +322,7 @@ async function main() {
     await sugar_hsi();
     await ttr_indibiz();
     await ttr_reseller();
+    await ttr_siptrunk();
   } catch (err) {
     console.error('❌ Error:', err);
   } finally {
