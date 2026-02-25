@@ -78,7 +78,7 @@ const mysql = require('./connection'); // Menggunakan pool dari connection.js
     }
 
     // Set Download Path
-    const downloadPath = path.resolve('D:/SCRAPPERS/Scrapper/file_download');
+    const downloadPath = path.join(__dirname, 'loaded_file', 'download_fulfillment');
     if (!fs.existsSync(downloadPath)) fs.mkdirSync(downloadPath, { recursive: true });
 
     await page._client().send('Page.setDownloadBehavior', {
