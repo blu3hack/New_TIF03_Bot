@@ -5,7 +5,7 @@ const { insertDate } = require('./currentDate');
 async function deleteExistingData() {
   const tableForDelete = ['mttr_mso'];
   const currentDate = insertDate;
-  const jenis_for_delete = ['balnus_ccm', 'jateng_ccm', 'jatim_ccm', 'area_ccm'];
+  const jenis_for_delete = ['balnus_ccm', 'jateng_ccm', 'jatim_ccm', 'area_ccm', 'tif'];
   const inPlaceholders = jenis_for_delete.map(() => '?').join(',');
 
   for (const table of tableForDelete) {
