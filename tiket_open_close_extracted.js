@@ -28,7 +28,7 @@ for (i = 0; i < nameFile.length; i++) {
   const result = getMatchingFiles(folderPath, nameFile[i]);
   const fileName = result.join('\n');
   const file = `${folderPath}/${fileName}`;
-  const outputDir = 'D:/Scrappers/Scrapper/extracted-files';
+  const outputDir = path.join(__dirname, 'extracted-files');
   const command = `7z x "${file}" -o"${outputDir}" -tzip -y`;
 
   exec(command, (error, stdout, stderr) => {
