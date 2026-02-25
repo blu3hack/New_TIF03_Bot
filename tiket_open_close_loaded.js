@@ -87,14 +87,14 @@ const { insertDate } = require('./currentDate');
     for (const table of tableForDelete) {
       const maxDate = await getMaxInsertAt(table);
       console.log(maxDate);
-      // if (maxDate) {
-      //   await deleteFromTable(table, maxDate);
-      // }
+      if (maxDate) {
+        await deleteFromTable(table, maxDate);
+      }
     }
 
     // 2. Load Data
-    // await processLoadData('open');
-    // await processLoadData('close');
+    await processLoadData('open');
+    await processLoadData('close');
 
     console.log('🏁 Seluruh proses WSA selesai!');
   } catch (err) {
