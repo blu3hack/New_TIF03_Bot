@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
-const folderPath = 'D:/Scrappers/Scrapper/extracted';
+const folderPath = path.join(__dirname, 'extracted');
 const open_tr4 = ['open', 'reg4']; // Bisa ditambah kata lain
 const close_tr4 = ['close', 'reg4']; // Bisa ditambah kata lain
 const open_tr5 = ['open', 'reg5']; // Bisa ditambah kata lain
