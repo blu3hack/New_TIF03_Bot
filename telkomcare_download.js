@@ -31,13 +31,16 @@ const path = require('path');
       await captchaImg.screenshot({ path: 'captcha/cpt.png' });
     }
 
-    function getCaptchaDB() {
-      return new Promise((resolve, reject) => {
-        pool.query("SELECT pesan FROM get_otp_for_download WHERE pesan LIKE '%cpt%' ORDER BY id DESC LIMIT 1", (err, result) => {
-          if (err) return reject(err);
-          resolve(result[0]?.pesan || null);
-        });
-      });
+    async function getCaptchaDB() {
+      const query = `
+        SELECT pesan 
+        FROM get_otp_for_download 
+        WHERE pesan LIKE '%cpt%' 
+        ORDER BY id DESC 
+        LIMIT 1
+      `;
+      const [rows] = await connection.query(query);
+      return rows;
     }
 
     await page.waitForSelector('#uname');
@@ -46,11 +49,11 @@ const path = require('path');
 
     await page.waitForTimeout(20000);
 
-    // const pesan = await getCaptchaDB();
-    // const captcha = pesan?.split(' ')[1];
-    // if (!captcha) throw new Error('Captcha tidak ditemukan');
+    const pesan = await getCaptchaDB();
+    const captcha = pesan?.split(' ')[1];
+    if (!captcha) throw new Error('Captcha tidak ditemukan');
 
-    // await page.type('#captcha-input', captcha);
+    await page.type('#captcha-input', captcha);
 
     if (await page.$('#agree')) {
       const checked = await page.$eval('#agree', (el) => el.checked);

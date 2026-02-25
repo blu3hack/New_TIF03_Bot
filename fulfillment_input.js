@@ -154,12 +154,98 @@ async function ff_hsi() {
   console.log('✅ Insert ke ff_hsi berhasil');
 }
 
+async function piloting_fulfillment() {
+  const sql = `
+    INSERT INTO piloting_fulfillment_cx (
+      periode, tgl, piloting, sto, 
+      tti_com, tti_tot, ttic, ach_ttic, ttic_comply, 
+      ffg_com, ffg_tot, ffg, ach_ffg, ffg_comply, 
+      tfg_com, tfg_tot, ttr_ffg, ach_tfg, tfg_comply
+    )
+    SELECT * FROM (
+      /* ================= DETAIL PER STO ================= */
+      SELECT
+        ? AS periode,
+        ? AS tgl,
+        rcm.piloting,
+        rcm.sto,
+
+        -- TTI Section
+        kemt.tti_comply AS tti_com,
+        kemt.tti_ps_ih AS tti_tot,
+        ROUND((kemt.tti_comply / NULLIF(kemt.tti_ps_ih, 0)) * 100, 2) AS ttic,
+        ROUND(((kemt.tti_comply / NULLIF(kemt.tti_ps_ih, 0)) * 100) / 92.72 * 100, 2) AS ach_ttic,
+        CASE WHEN (((kemt.tti_comply / NULLIF(kemt.tti_ps_ih, 0)) * 100) / 92.72 * 100) < 100 THEN 'not_comply' END AS ttic_comply,
+
+        -- FFG Section
+        kemt.ffg_comply AS ffg_com,
+        kemt.ffg_jml_ps AS ffg_tot,
+        ROUND((kemt.ffg_comply / NULLIF(kemt.ffg_jml_ps, 0)) * 100, 2) AS ffg,
+        ROUND(((kemt.ffg_comply / NULLIF(kemt.ffg_jml_ps, 0)) * 100) / 97.40 * 100, 2) AS ach_ffg,
+        CASE WHEN (((kemt.ffg_comply / NULLIF(kemt.ffg_jml_ps, 0)) * 100) / 97.40 * 100) < 100 THEN 'not_comply' END AS ffg_comply,
+
+        -- TFG Section
+        kemt.ttr_ffg_comply AS tfg_com,
+        kemt.ttr_ffg_ggn_wsa AS tfg_tot,
+        ROUND((kemt.ttr_ffg_comply / NULLIF(kemt.ttr_ffg_ggn_wsa, 0)) * 100, 2) AS ttr_ffg,
+        ROUND(((kemt.ttr_ffg_comply / NULLIF(kemt.ttr_ffg_ggn_wsa, 0)) * 100) / 80.81 * 100, 2) AS ach_tfg,
+        CASE WHEN (((kemt.ttr_ffg_comply / NULLIF(kemt.ttr_ffg_ggn_wsa, 0)) * 100) / 80.81 * 100) < 100 THEN 'not_comply' END AS tfg_comply
+
+      FROM region_ccm rcm
+      LEFT JOIN helper_fulfillment kemt ON kemt.lokasi = rcm.sto
+      WHERE rcm.piloting IS NOT NULL
+
+      UNION ALL 
+
+      /* ================= TOTAL PER PILOTING ================= */
+      SELECT
+        ? AS periode,
+        ? AS tgl,
+        rcm.piloting,
+        'TOTAL' AS sto,
+
+        SUM(kemt.tti_comply),
+        SUM(kemt.tti_ps_ih),
+        ROUND((SUM(kemt.tti_comply) / NULLIF(SUM(kemt.tti_ps_ih), 0)) * 100, 2),
+        ROUND(((SUM(kemt.tti_comply) / NULLIF(SUM(kemt.tti_ps_ih), 0)) * 100) / 92.72 * 100, 2),
+        CASE WHEN (((SUM(kemt.tti_comply) / NULLIF(SUM(kemt.tti_ps_ih), 0)) * 100) / 92.72 * 100) < 100 THEN 'not_comply' END,
+
+        SUM(kemt.ffg_comply),
+        SUM(kemt.ffg_jml_ps),
+        ROUND((SUM(kemt.ffg_comply) / NULLIF(SUM(kemt.ffg_jml_ps), 0)) * 100, 2),
+        ROUND(((SUM(kemt.ffg_comply) / NULLIF(SUM(kemt.ffg_jml_ps), 0)) * 100) / 97.40 * 100, 2),
+        CASE WHEN (((SUM(kemt.ffg_comply) / NULLIF(SUM(kemt.ffg_jml_ps), 0)) * 100) / 97.40 * 100) < 100 THEN 'not_comply' END,
+
+        SUM(kemt.ttr_ffg_comply),
+        SUM(kemt.ttr_ffg_ggn_wsa),
+        ROUND((SUM(kemt.ttr_ffg_comply) / NULLIF(SUM(kemt.ttr_ffg_ggn_wsa), 0)) * 100, 2),
+        ROUND(((SUM(kemt.ttr_ffg_comply) / NULLIF(SUM(kemt.ttr_ffg_ggn_wsa), 0)) * 100) / 80.81 * 100, 2),
+        CASE WHEN (((SUM(kemt.ttr_ffg_comply) / NULLIF(SUM(kemt.ttr_ffg_ggn_wsa), 0)) * 100) / 80.81 * 100) < 100 THEN 'not_comply' END
+        
+      FROM region_ccm rcm
+      LEFT JOIN helper_fulfillment kemt ON kemt.lokasi = rcm.sto
+      WHERE rcm.piloting IS NOT NULL
+      GROUP BY rcm.piloting
+    ) X
+    ORDER BY piloting, CASE WHEN sto = 'TOTAL' THEN 2 ELSE 1 END, sto;
+  `;
+
+  try {
+    const params = [yearMonth, currentDate, yearMonth, currentDate];
+    await pool.query(sql, params);
+    console.log('✅ Insert piloting_fulfillment_cx berhasil');
+  } catch (err) {
+    console.error('❌ Error piloting_fulfillment:', err.message);
+  }
+}
+
 // ================= MAIN =================
 async function main() {
   try {
     await deleteExistingData();
     await ff_ih();
     await ff_hsi();
+    await piloting_fulfillment();
   } catch (err) {
     console.error('❌ Error:', err);
   } finally {

@@ -10,7 +10,7 @@ async function deleteData(table) {
 
 async function importCSV(table, fileName) {
   const connection = await connectionPromise;
-  const filePath = `D:/SCRAPPERS/Scrapper/loaded_file/download_fulfillment/${fileName}.csv`;
+  const filePath = path.join(__dirname, 'loaded_file/download_fulfillment', `${fileName}.csv`);
   const selectedCols = ['INCIDENT', 'WORKZONE', 'WITEL', 'COMPLIANCE'];
   const rows = [];
 

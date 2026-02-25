@@ -9,7 +9,7 @@ async function deleteData(table) {
 
 async function importCSV(table, fileName) {
   const connection = await connectionPromise;
-  const filePath = `D:/SCRAPPERS/Scrapper/loaded_file/mttr_mso/${fileName}.csv`;
+  const filePath = path.join(__dirname, 'loaded_file/mttr_mso', `${fileName}.csv`);
   const selectedCols = ['Regional', 'Workzone', 'Incident', 'cnop3_compliance', 'site_down_severity'];
   const rows = [];
 

@@ -26,7 +26,7 @@ function runCommand(cmd, args = [], label = '', delay = 0) {
 async function main() {
   console.log('Melakukan Proses Loaded filedata ke dalam Database');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
-  // await runCommand('node', ['telkomcare'], '\n========= Proses Convert File Data =========', 5000);
+  await runCommand('node', ['telkomcare'], '\n========= Proses Convert File Data =========', 5000);
   await runCommand('node', ['telkomcare_input'], '\n========= Proses Input File Data =========', 5000);
   await runCommand('node', ['telkomcare_convert'], '\n========= Proses Convert File Data =========', 5000);
   await runCommand('node', ['telkomcare_input_sugar_datin'], '\n========= Proses load data SUgar Datin =========', 5000);

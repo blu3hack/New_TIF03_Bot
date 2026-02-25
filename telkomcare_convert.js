@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const path = require('path');
 
 function convertXLSToCSV(fileName) {
-  const filePath = `D:/SCRAPPERS/Scrapper/loaded_file/download_fulfillment/${fileName}.xls`;
+  const filePath = path.join(__dirname, 'loaded_file/download_fulfillment', `${fileName}.xls`);
   // Baca file sebagai teks
   let html = fs.readFileSync(filePath, 'utf8');
 

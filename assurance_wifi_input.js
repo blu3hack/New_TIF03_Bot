@@ -51,7 +51,7 @@ function inputDataToDatabase(file, jenis, insertToTable) {
         // Penentuan kolom Comply berdasarkan file dan jenis
         let comp;
         if (file.includes('ttr') && jenis === 'tif') {
-          comp = data[Object.keys(data)[4]] || '';
+          comp = data[Object.keys(data)[5]] || '';
         } else {
           comp = data[Object.keys(data)[5]] || '';
         }
