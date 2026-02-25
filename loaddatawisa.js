@@ -17,7 +17,7 @@ async function deleteOldData(table) {
 
 // Import CSV
 async function loadCSV(filename, table) {
-  const csvPath = `D:/SCRAPPERS/Scrapper/loaded_file/msa_upload/${filename}`;
+  const csvPath = path.join(__dirname, 'loaded_file/msa_upload', `${filename}.csv`);
 
   if (!fs.existsSync(csvPath)) {
     throw new Error(`File tidak ditemukan: ${csvPath}`);
