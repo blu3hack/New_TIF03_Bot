@@ -284,7 +284,7 @@ const fs = require('fs');
       console.log('Proses Pengambilan WSA Fulfillment HSI Selesai');
     }
 
-    await wsa_fulfillment_ih(page);
+    // await wsa_fulfillment_ih(page);
     await wsa_fulfillment_hsi(page);
   } catch (error) {
     console.error('Terjadi kesalahan:', error.message);
