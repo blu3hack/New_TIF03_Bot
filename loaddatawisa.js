@@ -48,8 +48,8 @@ async function run() {
   try {
     await deleteOldData('wisa_upload_operational');
 
-    await loadCSV('tif.csv', 'wisa_upload_operational');
-    await loadCSV('ccm.csv', 'wisa_upload_operational');
+    await loadCSV('tif', 'wisa_upload_operational');
+    await loadCSV('ccm', 'wisa_upload_operational');
 
     console.log('🎉 Semua proses selesai.');
   } catch (err) {
