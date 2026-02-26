@@ -27,6 +27,7 @@ async function main() {
   console.log('Melakukan Proses Loaded filedata ke dalam Database');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
 
+  await runCommand('node', ['newexpro'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
   await runCommand('node', ['newexpro_input'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
   await runCommand('node', ['newexpro_input_provcomp'], '\n========= Proses load data NewExpro =========', 5000);
 
