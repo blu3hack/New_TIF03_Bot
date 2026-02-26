@@ -1,6 +1,7 @@
 const fs = require('fs');
 const fastcsv = require('fast-csv');
 const connectionPromise = require('./connection');
+const path = require('path');
 async function deleteData(table) {
   const connection = await connectionPromise;
   const sql = `DELETE FROM \`${table}\``;
