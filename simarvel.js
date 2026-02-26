@@ -13,7 +13,7 @@ const { exec } = require('child_process');
   const page = await browser.newPage();
 
   // ================= SET FOLDER DOWNLOAD =================
-  const downloadPath = 'D:\\Scrappers\\Scrapper\\loaded_file\\mttr_mso';
+  const downloadPath = path.join(__dirname, 'loaded_file/mttr_mso', `${fileName}.csv`);
 
   const client = await page.target().createCDPSession();
   await client.send('Page.setDownloadBehavior', {
