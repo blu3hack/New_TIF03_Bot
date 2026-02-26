@@ -1,6 +1,7 @@
 const fs = require('fs');
 const pool = require('./connection');
 const { insertDate } = require('./currentDate.js');
+const path = require('path');
 
 // Hapus data lama
 async function deleteOldData(table) {
