@@ -1,6 +1,5 @@
 const connection = require('./connection');
 const { insertDate } = require('./currentDate');
-const path = require('path');
 
 // ================= DELETE DATA =================
 async function deleteExistingData() {
