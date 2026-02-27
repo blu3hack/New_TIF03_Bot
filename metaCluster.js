@@ -59,7 +59,6 @@ bot.on('message', async (msg) => {
     try {
       // Menghapus data lama sesuai logika asli Anda
       await pool.query('DELETE FROM get_otp_for_download');
-
       const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
       await pool.query('INSERT INTO get_otp_for_download (username, pesan, otp_for) VALUES (?, ?, ?)', [username, cmd, now]);
       console.log(`💾 Log [${cmd}] berhasil disimpan ke database.`);

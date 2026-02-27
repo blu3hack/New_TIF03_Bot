@@ -1,6 +1,9 @@
 const connection = require('./connection');
 const { insertDate } = require('./currentDate');
 
+const currentDate = insertDate;
+const yearMonth = currentDate.slice(0, 7).replace('-', '');
+
 // ================= DELETE DATA =================
 async function deleteExistingData() {
   const tableForDelete = ['ff_ih', 'ff_hsi'];
@@ -232,7 +235,7 @@ async function piloting_fulfillment() {
 
   try {
     const params = [yearMonth, currentDate, yearMonth, currentDate];
-    await pool.query(sql, params);
+    await connection.query(sql, params);
     console.log('✅ Insert piloting_fulfillment_cx berhasil');
   } catch (err) {
     console.error('❌ Error piloting_fulfillment:', err.message);
@@ -242,9 +245,9 @@ async function piloting_fulfillment() {
 // ================= MAIN =================
 async function main() {
   try {
-    await deleteExistingData();
-    await ff_ih();
-    await ff_hsi();
+    // await deleteExistingData();
+    // await ff_ih();
+    // await ff_hsi();
     await piloting_fulfillment();
   } catch (err) {
     console.error('❌ Error:', err);
