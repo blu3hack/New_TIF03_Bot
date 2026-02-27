@@ -245,9 +245,9 @@ async function piloting_fulfillment() {
 // ================= MAIN =================
 async function main() {
   try {
-    // await deleteExistingData();
-    // await ff_ih();
-    // await ff_hsi();
+    await deleteExistingData();
+    await ff_ih();
+    await ff_hsi();
     await piloting_fulfillment();
   } catch (err) {
     console.error('❌ Error:', err);
