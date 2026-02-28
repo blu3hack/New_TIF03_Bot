@@ -55,18 +55,18 @@
 //   MaxDate: lastDate,
 // };
 
-const periode_long_format = `2026-01-01 to 2026-01-31`;
-const periode_short_format = `202601`;
+const periode_long_format = `2026-02-01 to 2026-02-28`;
+const periode_short_format = `202602`;
 
-const startdate_short_format = `20260101`;
-const enddate_short_format = `20260131`;
+const startdate_short_format = `20260201`;
+const enddate_short_format = `20260228`;
 
-const startdate_long_format = `2026-01-01`;
-const enddate_long_format = `2026-01-31`;
+const startdate_long_format = `2026-02-01`;
+const enddate_long_format = `2026-02-28`;
 
-const insertDate = '2026-01-31';
-const periode_end_format = '2026-01-01 to 2026-01-31';
-const lastDate = '2026-01-31';
+const insertDate = '2026-02-28';
+const periode_end_format = '2026-02-01 to 2026-02-28';
+const lastDate = '2026-02-28';
 
 module.exports = {
   periode_long_format: periode_long_format,
