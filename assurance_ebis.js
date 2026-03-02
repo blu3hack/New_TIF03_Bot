@@ -150,7 +150,7 @@ const fs = require('fs');
 
         // Pilih Bulan
         await page.waitForSelector('#periodeValue', { visible: true });
-        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(1)', (el) => el.value));
+        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(2)', (el) => el.value));
         await page.waitForTimeout(2000);
 
         // Klik Terapkan Filter dan tunggu reload
@@ -219,7 +219,7 @@ const fs = require('fs');
 
         // Pilih Bulan
         await page.waitForSelector('#periodeValue', { visible: true });
-        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(1)', (el) => el.value));
+        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(2)', (el) => el.value));
         await page.waitForTimeout(2000);
 
         // Klik Terapkan Filter dan tunggu reload
@@ -287,7 +287,7 @@ const fs = require('fs');
 
         // Pilih Bulan
         await page.waitForSelector('#periodeValue', { visible: true });
-        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(1)', (el) => el.value));
+        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(2)', (el) => el.value));
         await page.waitForTimeout(2000);
 
         // Klik Terapkan Filter dan tunggu reload
@@ -367,7 +367,7 @@ const fs = require('fs');
 
         // Pilih Bulan
         await page.waitForSelector('#periodeValue', { visible: true });
-        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(1)', (el) => el.value));
+        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(2)', (el) => el.value));
         await page.waitForTimeout(2000);
 
         // Klik Terapkan Filter dan tunggu reload
@@ -436,7 +436,7 @@ const fs = require('fs');
 
         // Pilih Bulan
         await page.waitForSelector('#periodeValue', { visible: true });
-        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(1)', (el) => el.value));
+        await page.select('#periodeValue', await page.$eval('#periodeValue > option:nth-child(2)', (el) => el.value));
         await page.waitForTimeout(2000);
 
         // Klik Terapkan Filter dan tunggu reload
@@ -450,7 +450,7 @@ const fs = require('fs');
         // Tunggu tabel hasil muncul
         await page.waitForSelector('table', { visible: true, timeout: 20000 });
 
-        // Ambil data tabel
+        // Ambil data tabele
         const sqm_datin = await page.evaluate(() => {
           const table = document.querySelector('table');
           if (!table) return 'Tabel tidak ditemukan';
