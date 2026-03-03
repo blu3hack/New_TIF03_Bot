@@ -9,7 +9,7 @@ const likePeriode = `%${yearMonth}%`;
  * Fungsi hapus data lama agar tidak duplikat saat insert ulang
  */
 async function deleteExistingData() {
-  const tableForDelete = ['piloting_fulfillment_cx', 'piloting_n2n_cx'];
+  const tableForDelete = ['piloting_n2n_cx'];
   for (const table of tableForDelete) {
     try {
       const sql = `DELETE FROM ${table} WHERE periode = ?`;

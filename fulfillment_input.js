@@ -157,6 +157,19 @@ async function ff_hsi() {
   console.log('✅ Insert ke ff_hsi berhasil');
 }
 
+async function deleteExistingDataPiloting() {
+  const tableForDelete = ['piloting_fulfillment_cx'];
+  for (const table of tableForDelete) {
+    try {
+      const sql = `DELETE FROM ${table} WHERE periode = ?`;
+      await connection.query(sql, [yearMonth]);
+      console.log(`🗑️ Data lama di ${table} periode ${yearMonth} telah dihapus.`);
+    } catch (err) {
+      console.error(`❌ Gagal menghapus data di ${table}:`, err.message);
+    }
+  }
+}
+
 async function piloting_fulfillment() {
   const sql = `
     INSERT INTO piloting_fulfillment_cx (
@@ -245,10 +258,11 @@ async function piloting_fulfillment() {
 // ================= MAIN =================
 async function main() {
   try {
-    await deleteExistingData();
-    await ff_ih();
-    await ff_hsi();
-    await piloting_fulfillment();
+    // await deleteExistingData();
+    // await ff_ih();
+    // await ff_hsi();
+    await deleteExistingDataPiloting();
+    // await piloting_fulfillment();
   } catch (err) {
     console.error('❌ Error:', err);
   } finally {
