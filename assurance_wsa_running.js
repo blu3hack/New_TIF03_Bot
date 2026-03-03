@@ -26,10 +26,8 @@ function runCommand(cmd, args = [], label = '', delay = 0) {
 async function main() {
   console.log('Melakukan Proses Loaded filedata ke dalam Database');
   await new Promise((r) => setTimeout(r, 5000)); // delay 5 detik
-
   await runCommand('node', ['assurance_wsa_data'], '\n========= Proses Pengambilan data Assurance via BOT =========', 5000);
   await runCommand('node', ['assurance_wsa_input'], '\n========= Proses load data wsa gamas =========', 5000);
-
   console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik
 }
