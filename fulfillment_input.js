@@ -88,17 +88,40 @@ async function ff_hsi() {
       ? as tgl,
       rsb.area as jenis,
       rcm.region as lokasi,
-      ROUND(SUM(hf.tti_comply) / SUM(hf.tti_jml_ps) * 100, 2) as ttic,
       
-      ROUND(
+      CASE 
+        WHEN SUM(hf.tti_jml_ps) = 0 THEN 100 
+        ELSE ROUND(SUM(hf.tti_comply) / NULLIF(SUM(hf.tti_jml_ps), 0) * 100, 2) 
+      END AS ttic,
+      
+      CASE 
+        WHEN SUM(hf.ffg_avg_ps) = 0 THEN 100 
+        ELSE
+        ROUND(
         ( SUM(hf.ffg_avg_ps) - SUM(hf.ffg_not_comply) ) / SUM(hf.ffg_avg_ps) * 100
-      , 2) as ffg,
+      , 2)
+      END AS ffg,
       
-      ROUND(SUM(hf.pspi_jml_ps) / SUM(hf.pspi_jml_pi) * 100, 2) as pspi,
-      ROUND(SUM(hf.ttr_ffg_comply) / SUM(hf.ttr_ffg_jml_ggn) * 100, 2) as ttr_ffg,
-      ROUND(
-        ( SUM(hf.unspec_jml) - SUM(hf.unspec) ) / SUM(hf.unspec_jml) * 100
-      , 2) as unspec
+      CASE 
+        WHEN SUM(hf.pspi_jml_pi) = 0 THEN 100 
+        ELSE
+        ROUND(SUM(hf.pspi_jml_ps) / SUM(hf.pspi_jml_pi) * 100, 2)
+      END AS pspi,
+      
+      CASE 
+        WHEN SUM(hf.ttr_ffg_jml_ggn) = 0 THEN 100 
+        ELSE
+        ROUND(SUM(hf.ttr_ffg_comply) / SUM(hf.ttr_ffg_jml_ggn) * 100, 2)
+      END AS ttr_ffg,
+      
+      CASE 
+        WHEN SUM(hf.unspec_jml) = 0 THEN 100 
+        ELSE 
+          ROUND(
+            (SUM(hf.unspec_jml) - SUM(hf.unspec)) / SUM(hf.unspec_jml) * 100
+          , 2) 
+      END AS unspec
+      
     FROM region_ccm rcm
     LEFT JOIN helper_fulfillment_hsi hf ON hf.lokasi = rcm.sto
     LEFT JOIN region_sub_branch rsb ON rsb.lokasi = rcm.region
@@ -111,17 +134,39 @@ async function ff_hsi() {
       ? as tgl,
       rsb.area as jenis,
       rcm.branch as lokasi,
-      ROUND(SUM(hf.tti_comply) / SUM(hf.tti_jml_ps) * 100, 2) as ttic,
+      CASE 
+        WHEN SUM(hf.tti_jml_ps) = 0 THEN 100 
+        ELSE ROUND(SUM(hf.tti_comply) / NULLIF(SUM(hf.tti_jml_ps), 0) * 100, 2) 
+      END AS ttic,
       
-      ROUND(
+      CASE 
+        WHEN SUM(hf.ffg_avg_ps) = 0 THEN 100 
+        ELSE
+        ROUND(
         ( SUM(hf.ffg_avg_ps) - SUM(hf.ffg_not_comply) ) / SUM(hf.ffg_avg_ps) * 100
-      , 2) as ffg,
+      , 2)
+      END AS ffg,
       
-      ROUND(SUM(hf.pspi_jml_ps) / SUM(hf.pspi_jml_pi) * 100, 2) as pspi,
-      ROUND(SUM(hf.ttr_ffg_comply) / SUM(hf.ttr_ffg_jml_ggn) * 100, 2) as ttr_ffg,
-      ROUND(
-        ( SUM(hf.unspec_jml) - SUM(hf.unspec) ) / SUM(hf.unspec_jml) * 100
-      , 2) as unspec
+      
+      CASE 
+        WHEN SUM(hf.pspi_jml_pi) = 0 THEN 100 
+        ELSE
+        ROUND(SUM(hf.pspi_jml_ps) / SUM(hf.pspi_jml_pi) * 100, 2)
+      END AS pspi,
+      
+      CASE 
+        WHEN SUM(hf.ttr_ffg_jml_ggn) = 0 THEN 100 
+        ELSE
+        ROUND(SUM(hf.ttr_ffg_comply) / SUM(hf.ttr_ffg_jml_ggn) * 100, 2)
+      END AS ttr_ffg,
+      
+      CASE 
+        WHEN SUM(hf.unspec_jml) = 0 THEN 100 
+        ELSE 
+          ROUND(
+            (SUM(hf.unspec_jml) - SUM(hf.unspec)) / SUM(hf.unspec_jml) * 100
+          , 2) 
+      END AS unspec
     FROM region_ccm rcm
     LEFT JOIN helper_fulfillment_hsi hf ON hf.lokasi = rcm.sto
     LEFT JOIN region_sub_branch rsb ON rsb.lokasi = rcm.branch
