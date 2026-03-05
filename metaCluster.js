@@ -39,6 +39,7 @@ const availableCommands = [
   'wifi_revi_running',
   'wisaquery',
   'loaddatawisa',
+  'tiket_open_close_running',
   'delete_all_data',
 ];
 
