@@ -148,7 +148,7 @@ bot.on('message', async (msg) => {
     // Handle Output
     child.stdout.on('data', (data) => {
       const output = data.toString().trim();
-      if (output) bot.sendMessage(chatId, `📤 [${command}]:\n${output}`);
+      if (output) bot.sendMessage(chatId, `${output}`);
     });
 
     child.stderr.on('data', (data) => {

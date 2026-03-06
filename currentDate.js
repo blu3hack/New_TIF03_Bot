@@ -37,9 +37,9 @@ const today_short_format = today.replace(/-/g, '');
 const startdate_long_format = startdate;
 const enddate_short_format = today_short_format;
 const enddate_long_format = today;
-// const insertDate = today;
+const insertDate = today;
 
-const insertDate = '2026-02-28';
+// const insertDate = '2026-02-28';
 
 console.log(lastDate);
 
