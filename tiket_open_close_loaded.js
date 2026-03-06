@@ -84,13 +84,13 @@ const { insertDate } = require('./currentDate');
     console.log('🔄 Memulai proses ETL WSA...');
 
     // 1. Pembersihan Data Lama (Opsional - Aktifkan jika diperlukan)
-    // for (const table of tableForDelete) {
-    //   const maxDate = await getMaxInsertAt(table);
-    //   console.log(maxDate);
-    //   if (maxDate) {
-    //     await deleteFromTable(table, maxDate);
-    //   }
-    // }
+    for (const table of tableForDelete) {
+      const maxDate = await getMaxInsertAt(table);
+      console.log(maxDate);
+      if (maxDate) {
+        await deleteFromTable(table, maxDate);
+      }
+    }
 
     // 2. Load Data
     await processLoadData('open');
