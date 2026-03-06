@@ -69,7 +69,7 @@ const mysql = require('./connection'); // Menggunakan pool dari connection.js
     await page.waitForSelector('#company_dwld');
     await page.select('#company_dwld', 'TELKOM-OLD');
     await page.waitForTimeout(1000);
-    await page.select('#periode', '202603');
+    await page.select('#periode', '202602');
     await page.waitForTimeout(1000);
 
     const [filterBtn] = await page.$x("//button[contains(., 'Filter')]");
