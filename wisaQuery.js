@@ -331,5 +331,4 @@ async function main() {
   simpanCSV(ccm, 'ccm.csv');
   await pool.end();
 }
-
 main().catch(console.error);
