@@ -30,6 +30,7 @@ async function main() {
   await runCommand('node', ['newexpro'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
   await runCommand('node', ['newexpro_input'], '\n========= Proses Pengambilan data di NewExpro via BOT =========', 5000);
   await runCommand('node', ['newexpro_input_provcomp'], '\n========= Proses load data NewExpro =========', 5000);
+  await runCommand('node', ['newexpro_input_unspec_guarantee'], '\n========= Proses load data NewExpro =========', 5000);
 
   console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik
