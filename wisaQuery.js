@@ -67,17 +67,18 @@ async function main() {
     UNION ALL
     SELECT 'FFM-ENT-Fulfillment Guarantee Non HSI' AS kpi, sc_lokasi.witel AS lokasi, ffg_non_hsi.jenis AS Area, ffg_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ffg_non_hsi ON sc_lokasi.witel = ffg_non_hsi.regional AND ffg_non_hsi.tgl = '${tgl}' AND ffg_non_hsi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
-    SELECT 'FFM-ENT-TTD Compliance Datin & SIP Trunk' AS kpi, sc_lokasi.witel AS lokasi, ttd_non_hsi.jenis AS Area, ttd_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_non_hsi ON sc_lokasi.witel = ttd_non_hsi.regional AND ttd_non_hsi.tgl = '${tgl}' AND ttd_non_hsi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
+    SELECT 'FFM-ENT-TTD Compliance Datin & Siptrunk' AS kpi, sc_lokasi.witel AS lokasi, ttd_non_hsi.jenis AS Area, ttd_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_non_hsi ON sc_lokasi.witel = ttd_non_hsi.regional AND ttd_non_hsi.tgl = '${tgl}' AND ttd_non_hsi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'FFM-ENT-TTR Fulfillment Guarantee 3 Jam Non HSI' AS kpi, sc_lokasi.witel AS lokasi, ttr_ffg_non_hsi.jenis AS Area, ttr_ffg_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttr_ffg_non_hsi ON sc_lokasi.witel = ttr_ffg_non_hsi.regional AND ttr_ffg_non_hsi.tgl = '${tgl}' AND ttr_ffg_non_hsi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
+
     SELECT 'ONM-ALL-Service Availability-WiFi' AS kpi, sc_lokasi.witel AS lokasi, av_wifi_all.jenis AS Area, av_wifi_all.comply AS Realisasi FROM sc_lokasi LEFT JOIN av_wifi_all ON sc_lokasi.witel = av_wifi_all.regional AND av_wifi_all.tgl = '${tgl}' AND av_wifi_all.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'FFM-ENT- Compliance Underspec Warranty Guarantee HSI' AS kpi, sc_lokasi.witel AS lokasi, ff_hsi.jenis AS Area, ff_hsi.unspec AS Realisasi FROM sc_lokasi LEFT JOIN ff_hsi ON sc_lokasi.witel = ff_hsi.lokasi AND ff_hsi.tgl = '${tgl}' AND ff_hsi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'FFM-ENT-TTD Compliance WIFI' AS kpi, sc_lokasi.witel AS lokasi, ttd_wifi.jenis AS Area, ttd_wifi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_wifi ON sc_lokasi.witel = ttd_wifi.regional AND ttd_wifi.tgl = '${tgl}' AND ttd_wifi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
-    SELECT 'FFM-ENT-Provcomp Ratio  DATIN & SIP Trunk' AS kpi, sc_lokasi.witel AS lokasi, provcomp.jenis AS Area, provcomp.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp ON sc_lokasi.witel = provcomp.regional AND provcomp.tgl = '${tgl}' AND provcomp.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
+    SELECT 'FFM-ENT-Provcomp Ratio Datin & Siptrunk' AS kpi, sc_lokasi.witel AS lokasi, provcomp.jenis AS Area, provcomp.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp ON sc_lokasi.witel = provcomp.regional AND provcomp.tgl = '${tgl}' AND provcomp.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'FFM-ENT-Provcomp Ratio WiFi' AS kpi, sc_lokasi.witel AS lokasi, provcomp_wifi.jenis AS Area, provcomp_wifi.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp_wifi ON sc_lokasi.witel = provcomp_wifi.regional AND provcomp_wifi.tgl = '${tgl}' AND provcomp_wifi.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
@@ -175,17 +176,18 @@ async function main() {
       UNION ALL
       SELECT 'FFM-ENT-Fulfillment Guarantee Non HSI' AS kpi, sc_lokasi.witel AS lokasi, ffg_non_hsi.jenis AS Area, ffg_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ffg_non_hsi ON sc_lokasi.witel = ffg_non_hsi.regional AND ffg_non_hsi.tgl = '${tgl}' AND ffg_non_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ffg_non_hsi.comply IS NOT NULL
       UNION ALL
-      SELECT 'FFM-ENT-TTD Compliance Datin & SIP Trunk' AS kpi, sc_lokasi.witel AS lokasi, ttd_non_hsi.jenis AS Area, ttd_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_non_hsi ON sc_lokasi.witel = ttd_non_hsi.regional AND ttd_non_hsi.tgl = '${tgl}' AND ttd_non_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ttd_non_hsi.comply IS NOT NULL
+      SELECT 'FFM-ENT-TTD Compliance Datin & Siptrunk' AS kpi, sc_lokasi.witel AS lokasi, ttd_non_hsi.jenis AS Area, ttd_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_non_hsi ON sc_lokasi.witel = ttd_non_hsi.regional AND ttd_non_hsi.tgl = '${tgl}' AND ttd_non_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ttd_non_hsi.comply IS NOT NULL
       UNION ALL
       SELECT 'FFM-ENT-TTR Fulfillment Guarantee 3 Jam Non HSI' AS kpi, sc_lokasi.witel AS lokasi, ttr_ffg_non_hsi.jenis AS Area, ttr_ffg_non_hsi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttr_ffg_non_hsi ON sc_lokasi.witel = ttr_ffg_non_hsi.regional AND ttr_ffg_non_hsi.tgl = '${tgl}' AND ttr_ffg_non_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ttr_ffg_non_hsi.comply IS NOT NULL
       UNION ALL
+
       SELECT 'ONM-ALL-Service Availability-WiFi' AS kpi, sc_lokasi.witel AS lokasi, av_wifi_all.jenis AS Area, av_wifi_all.comply AS Realisasi FROM sc_lokasi LEFT JOIN av_wifi_all ON sc_lokasi.witel = av_wifi_all.regional AND av_wifi_all.tgl = '${tgl}' AND av_wifi_all.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND av_wifi_all.comply IS NOT NULL
       UNION ALL
       SELECT 'FFM-ENT- Compliance Underspec Warranty Guarantee HSI' AS kpi, sc_lokasi.witel AS lokasi, ff_hsi.jenis AS Area, ff_hsi.unspec AS Realisasi FROM sc_lokasi LEFT JOIN ff_hsi ON sc_lokasi.witel = ff_hsi.lokasi AND ff_hsi.tgl = '${tgl}' AND ff_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ff_hsi.unspec IS NOT NULL
       UNION ALL
       SELECT 'FFM-ENT-TTD Compliance WIFI' AS kpi, sc_lokasi.witel AS lokasi, ttd_wifi.jenis AS Area, ttd_wifi.comply AS Realisasi FROM sc_lokasi LEFT JOIN ttd_wifi ON sc_lokasi.witel = ttd_wifi.regional AND ttd_wifi.tgl = '${tgl}' AND ttd_wifi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND ttd_wifi.comply IS NOT NULL
       UNION ALL
-      SELECT 'FFM-ENT-Provcomp Ratio  DATIN & SIP Trunk' AS kpi, sc_lokasi.witel AS lokasi, provcomp.jenis AS Area, provcomp.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp ON sc_lokasi.witel = provcomp.regional AND provcomp.tgl = '${tgl}' AND provcomp.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND provcomp.comply IS NOT NULL
+      SELECT 'FFM-ENT-Provcomp Ratio Datin & Siptrunk' AS kpi, sc_lokasi.witel AS lokasi, provcomp.jenis AS Area, provcomp.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp ON sc_lokasi.witel = provcomp.regional AND provcomp.tgl = '${tgl}' AND provcomp.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND provcomp.comply IS NOT NULL
       UNION ALL
       SELECT 'FFM-ENT-Provcomp Ratio WiFi' AS kpi, sc_lokasi.witel AS lokasi, provcomp_wifi.jenis AS Area, provcomp_wifi.comply AS Realisasi FROM sc_lokasi LEFT JOIN provcomp_wifi ON sc_lokasi.witel = provcomp_wifi.regional AND provcomp_wifi.tgl = '${tgl}' AND provcomp_wifi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND provcomp_wifi.comply IS NOT NULL
       UNION ALL
