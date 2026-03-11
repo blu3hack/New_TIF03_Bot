@@ -227,7 +227,7 @@ const path = require('path');
           await newPage.waitForSelector('.page-content a', { visible: true });
           await newPage.click('.page-content a');
           console.log(`Download ${fileName} Dimulai...`);
-          await new Promise((resolve) => setTimeout(resolve, 10000));
+          await newPage.waitForTimeout(10000);
           // Tutup tab baru agar tidak menumpuk
           await newPage.close();
 
