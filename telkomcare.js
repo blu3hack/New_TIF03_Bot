@@ -36,14 +36,14 @@ const path = require('path');
 
     // ========
 
-    await page.waitForTimeout(20000);
-    await page.waitForSelector('#captcha-input');
-    const result = await getData();
-    const pesan = result[0].pesan; // contoh: "cpt azp"
-    const parts = pesan.split(' ');
-    const captcha = parts[1] || null; // ambil kata setelah "cpt"
-    console.log(captcha);
-    await page.type('#captcha-input', String(captcha)); // pastikan string
+    await page.waitForTimeout(5000);
+    // await page.waitForSelector('#captcha-input');
+    // const result = await getData();
+    // const pesan = result[0].pesan; // contoh: "cpt azp"
+    // const parts = pesan.split(' ');
+    // const captcha = parts[1] || null; // ambil kata setelah "cpt"
+    // console.log(captcha);
+    // await page.type('#captcha-input', String(captcha)); // pastikan string
 
     const checkboxSelector = '#agree';
     if (await page.$(checkboxSelector)) {
@@ -75,7 +75,7 @@ const path = require('path');
     await insertOTP();
     console.log('Berhasil login ke TelkomCare');
 
-    async function datin(url, jenis, index_download) {
+    async function datin(url, jenis, selector_download) {
       try {
         await page.goto(url, {
           waitUntil: 'domcontentloaded',
@@ -209,8 +209,8 @@ const path = require('path');
           const downloadPath = path.resolve(`loaded_file/download_fulfillment`);
           fs.mkdirSync(downloadPath, { recursive: true });
 
-          const [newTarget] = await Promise.all([browser.waitForTarget((target) => target.opener() === page.target()), page.click(`#node-3 > td:nth-child(${index_download}) > a`)]);
-
+          await page.waitForSelector(selector_download, { visible: true });
+          const [newTarget] = await Promise.all([browser.waitForTarget((target) => target.opener() === page.target()), page.click(selector_download)]);
           const newPage = await newTarget.page();
 
           // set lokasi download
@@ -226,6 +226,10 @@ const path = require('path');
           // klik tombol download
           await newPage.waitForSelector('.page-content a', { visible: true });
           await newPage.click('.page-content a');
+          console.log(`Download ${fileName} Dimulai...`);
+          await new Promise((resolve) => setTimeout(resolve, 10000));
+          // Tutup tab baru agar tidak menumpuk
+          await newPage.close();
 
           console.log(`Download ${fileName} selesai...`);
         } catch (e) {
@@ -239,17 +243,17 @@ const path = require('path');
     }
 
     const urls = [
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=DATIN24', 'sugar_datin', 4], // #node-3 > td:nth-child(4) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=HSI24', 'sugar_hsi', 4], // #node-3 > td:nth-child(4) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resumecompliance25', 'ttr_datin', 24], // #node-3 > td:nth-child(24) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrindibiz25', 'indibiz', 12], // #node-3 > td:nth-child(12) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrreseller25', 'reseller', 12], // #node-3 > td:nth-child(12) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=SIPTRUNK', 'siptrunk', 3], // #node-3 > td:nth-child(3) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=DWDM', 'dwdm', 3], // #node-3 > td:nth-child(3) > a
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=DATIN24', 'sugar_datin', '#node-3 > td:nth-child(4) > a'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=HSI24', 'sugar_hsi', '#node-3 > td:nth-child(4) > a'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resumecompliance25', 'ttr_datin', '#node-3 > td:nth-child(24) > a'], //
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrindibiz25', 'indibiz', '#node-3 > td:nth-child(12) > a'], //
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrreseller25', 'reseller', '#node-3 > td:nth-child(12) > a'], //
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=SIPTRUNK', 'siptrunk', '#node-3 > td:nth-child(3) > a'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=DWDM', 'dwdm', '#node-3 > td:nth-child(3) > a'],
     ];
 
-    for (const [url, jenis] of urls) {
-      await datin(url, jenis);
+    for (const [url, jenis, selector_download] of urls) {
+      await datin(url, jenis, selector_download);
       await page.waitForTimeout(5000);
     }
   } catch (err) {
