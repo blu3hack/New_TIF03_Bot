@@ -4,7 +4,6 @@ const { user_care, pass_care } = require('./login');
 const fs = require('fs');
 const { startdate_long_format, enddate_long_format } = require('./currentDate');
 const { exec } = require('child_process');
-const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: false });
@@ -75,7 +74,7 @@ const path = require('path');
     await insertOTP();
     console.log('Berhasil login ke TelkomCare');
 
-    async function datin(url, jenis, index_download) {
+    async function datin(url, jenis) {
       try {
         await page.goto(url, {
           waitUntil: 'domcontentloaded',
@@ -205,29 +204,6 @@ const path = require('path');
           });
           fs.writeFileSync(`loaded_file/asr_datin/${fileName}.csv`, data);
           console.log(`${fileName} berhasil diunduh`);
-
-          const downloadPath = path.resolve(`loaded_file/download_fulfillment`);
-          fs.mkdirSync(downloadPath, { recursive: true });
-
-          const [newTarget] = await Promise.all([browser.waitForTarget((target) => target.opener() === page.target()), page.click(`#node-3 > td:nth-child(${index_download}) > a`)]);
-
-          const newPage = await newTarget.page();
-
-          // set lokasi download
-          await newPage._client().send('Page.setDownloadBehavior', {
-            behavior: 'allow',
-            downloadPath: downloadPath,
-          });
-
-          // tunggu halaman tab baru benar-benar selesai
-          await newPage.waitForLoadState?.('networkidle').catch(() => {});
-          await newPage.waitForTimeout(5000);
-
-          // klik tombol download
-          await newPage.waitForSelector('.page-content a', { visible: true });
-          await newPage.click('.page-content a');
-
-          console.log(`Download ${fileName} selesai...`);
         } catch (e) {
           console.error(`Gagal ambil data ${fileName}: ${e.message}`);
         }
@@ -239,13 +215,13 @@ const path = require('path');
     }
 
     const urls = [
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=DATIN24', 'sugar_datin', 4], // #node-3 > td:nth-child(4) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=HSI24', 'sugar_hsi', 4], // #node-3 > td:nth-child(4) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resumecompliance25', 'ttr_datin', 24], // #node-3 > td:nth-child(24) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrindibiz25', 'indibiz', 12], // #node-3 > td:nth-child(12) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrreseller25', 'reseller', 12], // #node-3 > td:nth-child(12) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=SIPTRUNK', 'siptrunk', 3], // #node-3 > td:nth-child(3) > a
-      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=DWDM', 'dwdm', 3], // #node-3 > td:nth-child(3) > a
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=DATIN24', 'sugar_datin'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/wecaresugar25?sumber=HSI24', 'sugar_hsi'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resumecompliance25', 'ttr_datin'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrindibiz25', 'indibiz'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/resttrreseller25', 'reseller'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=SIPTRUNK', 'siptrunk'],
+      ['https://telkomcare.telkom.co.id/assurance/lapebis25/mttr25?sumber=DWDM', 'dwdm'],
     ];
 
     for (const [url, jenis] of urls) {
@@ -255,6 +231,6 @@ const path = require('path');
   } catch (err) {
     console.error('Ada kesalahan:', err.message);
   } finally {
-    // await browser.close();
+    await browser.close();
   }
 })();
