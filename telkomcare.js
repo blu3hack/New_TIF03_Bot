@@ -36,14 +36,14 @@ const path = require('path');
 
     // ========
 
-    await page.waitForTimeout(5000);
-    // await page.waitForSelector('#captcha-input');
-    // const result = await getData();
-    // const pesan = result[0].pesan; // contoh: "cpt azp"
-    // const parts = pesan.split(' ');
-    // const captcha = parts[1] || null; // ambil kata setelah "cpt"
-    // console.log(captcha);
-    // await page.type('#captcha-input', String(captcha)); // pastikan string
+    await page.waitForTimeout(20000);
+    await page.waitForSelector('#captcha-input');
+    const result = await getData();
+    const pesan = result[0].pesan; // contoh: "cpt azp"
+    const parts = pesan.split(' ');
+    const captcha = parts[1] || null; // ambil kata setelah "cpt"
+    console.log(captcha);
+    await page.type('#captcha-input', String(captcha)); // pastikan string
 
     const checkboxSelector = '#agree';
     if (await page.$(checkboxSelector)) {
