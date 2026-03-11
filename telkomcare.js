@@ -259,6 +259,6 @@ const path = require('path');
   } catch (err) {
     console.error('Ada kesalahan:', err.message);
   } finally {
-    // await browser.close();
+    await browser.close();
   }
 })();
