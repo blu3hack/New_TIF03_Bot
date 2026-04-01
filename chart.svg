@@ -1,0 +1,158 @@
+<svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+
+  <filter id="shadow-md" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="3" dy="4" stdDeviation="4" flood-color="#00000030"/>
+  </filter>
+  <filter id="shadow-sm" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000025"/>
+  </filter>
+  <filter id="shadow-lg" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="4" dy="5" stdDeviation="6" flood-color="#00000035"/>
+  </filter>
+
+  <linearGradient id="blue-top" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#3a7fc1"/>
+    <stop offset="100%" stop-color="#1a5d9a"/>
+  </linearGradient>
+  <linearGradient id="blue-side" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#124a80"/>
+    <stop offset="100%" stop-color="#0d3a65"/>
+  </linearGradient>
+
+  <linearGradient id="green-face" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#4a8c2a"/>
+    <stop offset="100%" stop-color="#2d6016"/>
+  </linearGradient>
+  <linearGradient id="green-side" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#1e4a0e"/>
+    <stop offset="100%" stop-color="#163808"/>
+  </linearGradient>
+
+  <linearGradient id="red-face" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#e03030"/>
+    <stop offset="100%" stop-color="#b01818"/>
+  </linearGradient>
+  <linearGradient id="red-side" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#8a1010"/>
+    <stop offset="100%" stop-color="#6e0c0c"/>
+  </linearGradient>
+
+  <linearGradient id="yellow-face" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#e8b020"/>
+    <stop offset="100%" stop-color="#c08010"/>
+  </linearGradient>
+  <linearGradient id="yellow-side" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#966010"/>
+    <stop offset="100%" stop-color="#7a4c0a"/>
+  </linearGradient>
+
+  <linearGradient id="dbblue-face" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#2a5f8f"/>
+    <stop offset="100%" stop-color="#1a3f6a"/>
+  </linearGradient>
+  <linearGradient id="dbblue-side" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#102845"/>
+    <stop offset="100%" stop-color="#0a1e35"/>
+  </linearGradient>
+</defs>
+
+<!-- 93 KPI box -->
+<rect x="32" y="162" width="86" height="86" rx="10" fill="#00000018" filter="url(#shadow-lg)"/>
+<polygon points="118,160 128,152 128,234 118,242" fill="url(#blue-side)"/>
+<polygon points="32,160 42,152 128,152 118,160" fill="#2e6aaa"/>
+<rect x="32" y="160" width="86" height="82" rx="8" fill="url(#blue-top)"/>
+<text x="75" y="198" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="white">93</text>
+<text x="75" y="220" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#b8d4f0">KPI</text>
+
+<!-- Bracket connector -->
+<line x1="118" y1="184" x2="148" y2="184" stroke="#5bc4f0" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="148" y1="119" x2="148" y2="249" stroke="#5bc4f0" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="148" y1="119" x2="174" y2="119" stroke="#5bc4f0" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="148" y1="184" x2="174" y2="184" stroke="#5bc4f0" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="148" y1="249" x2="174" y2="249" stroke="#5bc4f0" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- ACH -->
+<rect x="177" y="148" width="132" height="42" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="309,100 319,92 319,136 309,144" fill="url(#green-side)"/>
+<polygon points="177,100 187,92 319,92 309,100" fill="#3e7520"/>
+<rect x="177" y="100" width="132" height="44" rx="7" fill="url(#green-face)"/>
+<text x="243" y="127" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="white">ACH</text>
+
+<!-- NOT ACH -->
+<rect x="177" y="213" width="132" height="42" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="309,165 319,157 319,201 309,209" fill="url(#red-side)"/>
+<polygon points="177,165 187,157 319,157 309,165" fill="#c02020"/>
+<rect x="177" y="165" width="132" height="44" rx="7" fill="url(#red-face)"/>
+<text x="243" y="192" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="white">NOT ACH</text>
+
+<!-- BLANK (N/A) -->
+<rect x="177" y="278" width="132" height="42" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="309,230 319,222 319,266 309,274" fill="url(#yellow-side)"/>
+<polygon points="177,230 187,222 319,222 309,230" fill="#c89010"/>
+<rect x="177" y="230" width="132" height="44" rx="7" fill="url(#yellow-face)"/>
+<text x="243" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="white">BLANK (N/A)</text>
+
+<!-- Column W1 #1 -->
+<rect x="338" y="58" width="66" height="242" rx="14" fill="none" stroke="#5bc4f0" stroke-width="2.5" filter="url(#shadow-md)"/>
+<polygon points="396,62 406,54 406,94 396,104" fill="url(#dbblue-side)"/>
+<polygon points="342,62 352,54 406,54 396,62" fill="#224e78"/>
+<rect x="342" y="62" width="54" height="42" rx="8" fill="url(#dbblue-face)"/>
+<text x="369" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="white">W1</text>
+<polygon points="396,112 406,104 406,148 396,158" fill="url(#green-side)"/>
+<polygon points="342,112 352,104 406,104 396,112" fill="#3e7520"/>
+<rect x="342" y="112" width="54" height="46" rx="7" fill="url(#green-face)"/>
+<text x="369" y="139" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+<polygon points="396,164 406,156 406,200 396,210" fill="url(#red-side)"/>
+<polygon points="342,164 352,156 406,156 396,164" fill="#c02020"/>
+<rect x="342" y="164" width="54" height="46" rx="7" fill="url(#red-face)"/>
+<text x="369" y="191" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+<polygon points="396,216 406,208 406,252 396,262" fill="url(#yellow-side)"/>
+<polygon points="342,216 352,208 406,208 396,216" fill="#c89010"/>
+<rect x="342" y="216" width="54" height="46" rx="7" fill="url(#yellow-face)"/>
+<text x="369" y="243" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+
+<!-- Column W1 #2 -->
+<rect x="416" y="58" width="66" height="242" rx="14" fill="none" stroke="#5bc4f0" stroke-width="2.5" filter="url(#shadow-md)"/>
+<polygon points="474,62 484,54 484,94 474,104" fill="url(#dbblue-side)"/>
+<polygon points="420,62 430,54 484,54 474,62" fill="#224e78"/>
+<rect x="420" y="62" width="54" height="42" rx="8" fill="url(#dbblue-face)"/>
+<text x="447" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="white">W1</text>
+<polygon points="474,112 484,104 484,148 474,158" fill="url(#green-side)"/>
+<polygon points="420,112 430,104 484,104 474,112" fill="#3e7520"/>
+<rect x="420" y="112" width="54" height="46" rx="7" fill="url(#green-face)"/>
+<text x="447" y="139" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+<polygon points="474,164 484,156 484,200 474,210" fill="url(#red-side)"/>
+<polygon points="420,164 430,156 484,156 474,164" fill="#c02020"/>
+<rect x="420" y="164" width="54" height="46" rx="7" fill="url(#red-face)"/>
+<text x="447" y="191" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+<polygon points="474,216 484,208 484,252 474,262" fill="url(#yellow-side)"/>
+<polygon points="420,216 430,208 484,208 474,216" fill="#c89010"/>
+<rect x="420" y="216" width="54" height="46" rx="7" fill="url(#yellow-face)"/>
+<text x="447" y="243" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="white">20</text>
+
+<!-- UP : 10 -->
+<rect x="556" y="105" width="106" height="44" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="662,107 672,99 672,143 662,149" fill="url(#green-side)"/>
+<polygon points="558,107 568,99 672,99 662,107" fill="#3e7520"/>
+<rect x="558" y="107" width="104" height="42" rx="7" fill="url(#green-face)"/>
+<text x="610" y="132" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="white">UP : 10</text>
+
+<!-- DOWN : 10 -->
+<rect x="556" y="173" width="106" height="44" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="662,175 672,167 672,211 662,217" fill="url(#red-side)"/>
+<polygon points="558,175 568,167 672,167 662,175" fill="#c02020"/>
+<rect x="558" y="175" width="104" height="42" rx="7" fill="url(#red-face)"/>
+<text x="610" y="200" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="white">DOWN : 10</text>
+
+<!-- SAME : 80 -->
+<rect x="556" y="241" width="106" height="44" rx="7" fill="#00000015" filter="url(#shadow-sm)"/>
+<polygon points="662,243 672,235 672,279 662,285" fill="url(#yellow-side)"/>
+<polygon points="558,243 568,235 672,235 662,243" fill="#c89010"/>
+<rect x="558" y="243" width="104" height="42" rx="7" fill="url(#yellow-face)"/>
+<text x="610" y="268" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="white">SAME : 80</text>
+
+</svg>
