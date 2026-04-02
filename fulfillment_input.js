@@ -58,7 +58,7 @@ async function ff_ih() {
       'tif' as jenis,
       
       CASE
-        WHEN lokasi LIKE 'AREA %' THEN
+        WHEN lokasi LIKE 'TERRITORY %' THEN
             CONCAT(
                 'TERRITORY ',
                 LPAD(SUBSTRING_INDEX(lokasi, ' ', -1), 2, '0')
@@ -70,7 +70,7 @@ async function ff_ih() {
       ROUND(ffg_real ,2) as ffg,
       ROUND(ttr_ffg_real, 2) as ttr_ffg
       
-    FROM helper_fulfillment WHERE lokasi LIKE '%AREA%'
+    FROM helper_fulfillment WHERE lokasi LIKE '%TERRITORY%'
     ORDER BY jenis, lokasi;
   `;
 
