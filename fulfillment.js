@@ -116,21 +116,21 @@ const fs = require('fs');
       await page.waitForTimeout(3000);
 
       async function fulfillment_data(fileName) {
-        const selectSelector = '#periode';
-        const optionValue = periode_short_format;
-        await page.waitForSelector(selectSelector);
-        await page.evaluate(
-          (selectSelector, optionValue) => {
-            const selectElement = document.querySelector(selectSelector);
-            if (selectElement) {
-              selectElement.value = optionValue;
-              const event = new Event('change', { bubbles: true });
-              selectElement.dispatchEvent(event);
-            }
-          },
-          selectSelector,
-          optionValue,
-        );
+        // const selectSelector = '#periode';
+        // const optionValue = periode_short_format;
+        // await page.waitForSelector(selectSelector);
+        // await page.evaluate(
+        //   (selectSelector, optionValue) => {
+        //     const selectElement = document.querySelector(selectSelector);
+        //     if (selectElement) {
+        //       selectElement.value = optionValue;
+        //       const event = new Event('change', { bubbles: true });
+        //       selectElement.dispatchEvent(event);
+        //     }
+        //   },
+        //   selectSelector,
+        //   optionValue,
+        // );
         await page.waitForTimeout(10000);
         await page.waitForSelector('#form > div > div > div.form-group.col-md-1 > button');
 
