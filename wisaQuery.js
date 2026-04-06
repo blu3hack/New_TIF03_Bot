@@ -109,6 +109,24 @@ async function main() {
     SELECT 'ASR-WHM-MTTRi Minor Compliance' AS kpi, sc_lokasi.witel AS lokasi, mttr_mso.jenis AS Area, mttr_mso.minor AS Realisasi FROM sc_lokasi LEFT JOIN mttr_mso ON sc_lokasi.witel = mttr_mso.regional AND mttr_mso.tgl = '${tgl}' AND mttr_mso.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
     UNION ALL
     SELECT 'ASR-WHM-MTTRi Premium Site Compliance' AS kpi, sc_lokasi.witel AS lokasi, mttr_mso.jenis AS Area, mttr_mso.premium AS Realisasi FROM sc_lokasi LEFT JOIN mttr_mso ON sc_lokasi.witel = mttr_mso.regional AND mttr_mso.tgl = '${tgl}' AND mttr_mso.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
+    UNION ALL
+    SELECT 'ASR-ENT-MTTR DWDM Unprotected & Protected Repair' AS kpi, sc_lokasi.witel AS lokasi, ttr_dwdm.jenis AS Area, '-' AS Realisasi FROM sc_lokasi LEFT JOIN ttr_dwdm ON sc_lokasi.witel = ttr_dwdm.treg AND ttr_dwdm.tgl = '${tgl}' AND ttr_dwdm.jenis IN ('tif') WHERE sc_lokasi.reg IN ('tif') AND sc_lokasi.witel = 'TERRITORY 03'
+
+    UNION ALL
+
+    SELECT
+      'ONM-WHF-Service and Infrastructure Data Validity' AS kpi,
+      sc_lokasi.witel AS lokasi,
+      valdat_new.jenis AS Area,
+      valdat_new.realisasi AS Realisasi
+    FROM
+      sc_lokasi
+      LEFT JOIN valdat_new ON sc_lokasi.witel = valdat_new.witel
+      AND valdat_new.tgl = '2026-04-06'
+      AND valdat_new.jenis IN ('tif')
+    WHERE
+      sc_lokasi.reg IN ('tif')
+      AND sc_lokasi.witel = 'TERRITORY 03' 
   `;
 
   const sqlccm = `
@@ -218,6 +236,43 @@ async function main() {
       SELECT 'ASR-WHM-MTTRi Minor Compliance' AS kpi, sc_lokasi.witel AS lokasi, mttr_mso.jenis AS Area, mttr_mso.minor AS Realisasi FROM sc_lokasi LEFT JOIN mttr_mso ON sc_lokasi.witel = mttr_mso.regional AND mttr_mso.tgl = '${tgl}' AND mttr_mso.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND mttr_mso.minor IS NOT NULL
       UNION ALL
       SELECT 'ASR-WHM-MTTRi Premium Site Compliance' AS kpi, sc_lokasi.witel AS lokasi, mttr_mso.jenis AS Area, mttr_mso.premium AS Realisasi FROM sc_lokasi LEFT JOIN mttr_mso ON sc_lokasi.witel = mttr_mso.regional AND mttr_mso.tgl = '${tgl}' AND mttr_mso.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') WHERE sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm') AND mttr_mso.premium IS NOT NULL
+      UNION ALL
+      SELECT
+        'ASR-ENT-MTTR DWDM Unprotected & Protected Repair' AS kpi,
+        sc_lokasi.witel AS lokasi,
+        
+        -- Perbaikan: Tambahkan tanda kutip dan perbaiki titik menjadi underscore
+        CASE 
+          WHEN sc_lokasi.witel IN ('BALI NUSRA', 'JATENG DIY', 'JAWA TIMUR') THEN 'area_ccm' 
+          ELSE 'branch' 
+        END AS Area,
+
+        '-' AS realisasi
+      FROM
+        sc_lokasi
+        LEFT JOIN ttr_dwdm ON sc_lokasi.witel = ttr_dwdm.treg -- Pastikan kolom join benar
+        AND ttr_dwdm.tgl = '${tgl}'
+        AND ttr_dwdm.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+      WHERE
+        sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+
+      UNION ALL
+
+      SELECT
+        'ONM-WHF-Service and Infrastructure Data Validity' AS kpi,
+        sc_lokasi.witel AS lokasi,
+        valdat_new.jenis AS Area,
+        valdat_new.realisasi AS Realisasi
+      FROM
+        sc_lokasi
+        LEFT JOIN valdat_new ON sc_lokasi.witel = valdat_new.witel
+        AND valdat_new.tgl = '${tgl}'
+        AND valdat_new.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+      WHERE
+        sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+        AND valdat_new.realisasi IS NOT NULL
+
+
   `;
 
   const [tif] = await pool.execute(sqltif);
