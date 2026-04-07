@@ -214,5 +214,5 @@ const { user_aribi, pass_aribi } = require('./login');
   fs.writeFileSync('loaded_file/valdat/bali.csv', distric_bali);
 
   // Tutup browser setelah penundaan
-  // await browser.close();
+  await browser.close();
 })();
