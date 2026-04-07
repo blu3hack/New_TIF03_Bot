@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const connection = require('./connection');
 const csv = require('csv-parser');
 const { exec } = require('child_process');
 const { user_aribi, pass_aribi } = require('./login');
