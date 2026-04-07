@@ -40,12 +40,12 @@ const { user_aribi, pass_aribi } = require('./login');
 
   // input captcha
   await page.waitForTimeout(20000);
-  // const result = await getData();
-  // const pesan = result[0].pesan; // contoh: "cpt azp"
-  // const parts = pesan.split(' ');
-  // const captcha = parts[1] || null; // ambil kata setelah "cpt"
-  // console.log(captcha);
-  // await page.type('[placeholder="Masukan captcha"]', String(captcha));
+  const result = await getData();
+  const pesan = result[0].pesan; // contoh: "cpt azp"
+  const parts = pesan.split(' ');
+  const captcha = parts[1] || null; // ambil kata setelah "cpt"
+  console.log(captcha);
+  await page.type('[placeholder="Masukan captcha"]', String(captcha));
 
   await page.waitForTimeout(5000);
   await page.click('body > div.container-fluid > div > div.col-xl-4.p-0 > div > form > div:nth-child(10) > button');

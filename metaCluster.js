@@ -41,6 +41,7 @@ const availableCommands = [
   'loaddatawisa',
   'tiket_open_close_running',
   'delete_all_data',
+  'valdat_running',
 ];
 
 // === LOGIKA UTAMA BOT ===

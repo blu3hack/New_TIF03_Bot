@@ -41,12 +41,12 @@ const fs = require('fs');
 
     // input captcha
     await page.waitForTimeout(20000);
-    const result = await getData();
-    const pesan = result[0].pesan; // contoh: "cpt azp"
-    const parts = pesan.split(' ');
-    const captcha = parts[1] || null; // ambil kata setelah "cpt"
-    console.log(captcha);
-    await page.type('[placeholder="Captcha"]', String(captcha));
+    // const result = await getData();
+    // const pesan = result[0].pesan; // contoh: "cpt azp"
+    // const parts = pesan.split(' ');
+    // const captcha = parts[1] || null; // ambil kata setelah "cpt"
+    // console.log(captcha);
+    // await page.type('[placeholder="Captcha"]', String(captcha));
 
     await page.waitForTimeout(5000);
     await page.click('#mtLogin > div:nth-child(5) > button');
@@ -111,6 +111,10 @@ const fs = require('fs');
 
     async function non_numbering() {
       await goToLinkByXPath("//a[contains(., 'Non-Numbering Infra')]");
+    }
+
+    async function outstanding_saldo() {
+      await goToLinkByXPath("//a[contains(., 'Outstanding Ticket')]");
     }
 
     async function unspec_datin() {
@@ -475,14 +479,21 @@ const fs = require('fs');
       await data_ttr(1, 6, 'datin', 'reg5');
     }
 
-    await unspec_datin();
-    await q_hsi();
-    await sqm_datin();
-    await ttr();
-    await q_datin();
+    async function outstanding_saldo_datin() {
+      console.log('============== OutStanding Saldo Datin ===============');
+      await page.waitForTimeout(5000);
+      await outstanding_saldo();
+    }
+
+    // await unspec_datin();
+    // await q_hsi();
+    // await sqm_datin();
+    // await ttr();
+    // await q_datin();
+    await outstanding_saldo_datin();
   } catch (error) {
     console.error('Terjadi kesalahan:', error.message);
   } finally {
-    await browser.close();
+    // await browser.close();
   }
 })();
