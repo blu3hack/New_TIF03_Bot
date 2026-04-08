@@ -122,11 +122,43 @@ async function main() {
     FROM
       sc_lokasi
       LEFT JOIN valdat_new ON sc_lokasi.witel = valdat_new.witel
-      AND valdat_new.tgl = '2026-04-06'
+      AND valdat_new.tgl = '${tgl}'
       AND valdat_new.jenis IN ('tif')
     WHERE
       sc_lokasi.reg IN ('tif')
-      AND sc_lokasi.witel = 'TERRITORY 03' 
+      AND sc_lokasi.witel = 'TERRITORY 03'
+
+    UNION ALL 
+
+    SELECT
+      'ASR-ENT-Outstanding Saldo DATIN' AS kpi,
+      sc_lokasi.witel AS lokasi,
+      out_saldo_datin.jenis AS Area,
+      out_saldo_datin.comply AS Realisasi
+    FROM
+      sc_lokasi
+      LEFT JOIN out_saldo_datin ON sc_lokasi.witel = out_saldo_datin.regional
+      AND out_saldo_datin.tgl = '${tgl}'
+      AND out_saldo_datin.jenis IN ('tif')
+    WHERE
+      sc_lokasi.reg IN ('tif')
+      AND sc_lokasi.witel = 'TERRITORY 03'
+
+    UNION ALL 
+
+    SELECT
+      'ASR-ENT-Outstanding Saldo HSI' AS kpi,
+      sc_lokasi.witel AS lokasi,
+      out_saldo_hsi.jenis AS Area,
+      out_saldo_hsi.comply AS Realisasi
+    FROM
+      sc_lokasi
+      LEFT JOIN out_saldo_hsi ON sc_lokasi.witel = out_saldo_hsi.regional
+      AND out_saldo_hsi.tgl = '${tgl}'
+      AND out_saldo_hsi.jenis IN ('tif')
+    WHERE
+      sc_lokasi.reg IN ('tif')
+      AND sc_lokasi.witel = 'TERRITORY 03'
   `;
 
   const sqlccm = `
@@ -271,6 +303,38 @@ async function main() {
       WHERE
         sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
         AND valdat_new.realisasi IS NOT NULL
+
+      UNION ALL
+
+      SELECT
+        'ASR-ENT-Outstanding Saldo DATIN' AS kpi,
+        sc_lokasi.witel AS lokasi,
+        out_saldo_datin.jenis AS Area,
+        out_saldo_datin.comply AS Realisasi
+      FROM
+        sc_lokasi
+        LEFT JOIN out_saldo_datin ON sc_lokasi.witel = out_saldo_datin.regional
+        AND out_saldo_datin.tgl = '${tgl}'
+        AND out_saldo_datin.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+      WHERE
+        sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+        AND out_saldo_datin.comply IS NOT NULL
+
+      UNION ALL
+
+      SELECT
+        'ASR-ENT-Outstanding Saldo HSI' AS kpi,
+        sc_lokasi.witel AS lokasi,
+        out_saldo_hsi.jenis AS Area,
+        out_saldo_hsi.comply AS Realisasi
+      FROM
+        sc_lokasi
+        LEFT JOIN out_saldo_hsi ON sc_lokasi.witel = out_saldo_hsi.regional
+        AND out_saldo_hsi.tgl = '${tgl}'
+        AND out_saldo_hsi.jenis IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+      WHERE
+        sc_lokasi.reg IN ('area_ccm', 'balnus_ccm', 'jateng_ccm', 'jatim_ccm')
+        AND out_saldo_hsi.comply IS NOT NULL
 
 
   `;

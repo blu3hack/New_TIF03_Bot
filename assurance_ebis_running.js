@@ -33,6 +33,7 @@ async function main() {
   await runCommand('node', ['assurance_ebis_input_q'], '\n========= Proses Input Data EBIS =========', 5000);
   await runCommand('node', ['assurance_ebis_input_sqm'], '\n========= Proses Input Data EBIS =========', 5000);
   await runCommand('node', ['assurance_ebis_input_ccm'], '\n========= Proses Input Data EBIS =========', 5000);
+  await runCommand('node', ['assurance_ebis_input_out_saldo'], '\n========= Proses Input Data EBIS =========', 5000);
 
   console.log('\nEksekusi selesai. Tunggu sebentar sebelum menutup...');
   await new Promise((r) => setTimeout(r, 3000)); // delay 3 detik

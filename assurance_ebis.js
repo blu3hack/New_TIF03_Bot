@@ -41,12 +41,12 @@ const fs = require('fs');
 
     // input captcha
     await page.waitForTimeout(20000);
-    // const result = await getData();
-    // const pesan = result[0].pesan; // contoh: "cpt azp"
-    // const parts = pesan.split(' ');
-    // const captcha = parts[1] || null; // ambil kata setelah "cpt"
-    // console.log(captcha);
-    // await page.type('[placeholder="Captcha"]', String(captcha));
+    const result = await getData();
+    const pesan = result[0].pesan; // contoh: "cpt azp"
+    const parts = pesan.split(' ');
+    const captcha = parts[1] || null; // ambil kata setelah "cpt"
+    console.log(captcha);
+    await page.type('[placeholder="Captcha"]', String(captcha));
 
     await page.waitForTimeout(5000);
     await page.click('#mtLogin > div:nth-child(5) > button');
@@ -483,17 +483,90 @@ const fs = require('fs');
       console.log('============== OutStanding Saldo Datin ===============');
       await page.waitForTimeout(5000);
       await outstanding_saldo();
+      async function data_out_saldo(bulan, group, regional, witel, produk, keterangan, nama_file) {
+        await page.waitForTimeout(5000);
+        await page.evaluate(() => {
+          [...document.querySelectorAll('a.btn.wrn-gradasi')].find((el) => el.textContent.trim() === 'Filter')?.click();
+        });
+
+        // Tunggu modal filter muncul
+        await page.waitForSelector('#grup_teritori', { visible: true, timeout: 10000 });
+
+        // Pilih Bulan
+        await page.waitForSelector('#periodeValue', { visible: true });
+        await page.select('#periodeValue', await page.$eval(`#periodeValue > option:nth-child(${bulan})`, (el) => el.value));
+        await page.waitForTimeout(2000);
+
+        // Pilih Group territory
+        await page.select('#grup_teritori', await page.$eval(`#grup_teritori option:nth-child(${group})`, (el) => el.value));
+        await page.waitForTimeout(2000);
+
+        // Pilih Regional
+        await page.waitForSelector('#regional', { visible: true });
+        await page.select('#regional', await page.$eval(`#regional option:nth-child(${regional})`, (el) => el.value));
+        await page.waitForTimeout(2000);
+
+        // Pilih Witel
+        await page.waitForSelector('#witel', { visible: true });
+        await page.select('#witel', await page.$eval(`#witel option:nth-child(${witel})`, (el) => el.value));
+        await page.waitForTimeout(2000);
+
+        // Pilih Bulan
+        await page.waitForSelector('#___produk_', { visible: true });
+        await page.select('#___produk_', await page.$eval(`#___produk_ > option:nth-child(${produk})`, (el) => el.value));
+        await page.waitForTimeout(2000);
+
+        // Klik Terapkan Filter dan tunggu reload
+        await Promise.all([
+          page.waitForNavigation({ waitUntil: 'networkidle0' }),
+          page.evaluate(() => {
+            [...document.querySelectorAll('button.btn.wrn-gradasi')].find((el) => el.textContent.trim() === 'Filter')?.click();
+          }),
+        ]);
+
+        // Tunggu tabel hasil muncul
+        await page.waitForSelector('table', { visible: true, timeout: 20000 });
+
+        // Ambil data tabele
+        const out_saldo = await page.evaluate(() => {
+          const table = document.querySelector('table');
+          if (!table) return 'Tabel tidak ditemukan';
+          return Array.from(table.querySelectorAll('tr'))
+            .map((row) =>
+              Array.from(row.querySelectorAll('td, th'))
+                .map((col) => col.innerText.trim().replace(/,/g, '')) // Hapus koma di dalam isi sel
+                .join(','),
+            )
+            .join('\n');
+        });
+
+        console.log(out_saldo);
+        fs.writeFileSync(`loaded_file/unspec_datin/out_${keterangan}_${nama_file}.csv`, out_saldo);
+        console.log(`out_saldo_${keterangan}_${nama_file} berhasil didownload \n`);
+      }
+
+      await data_out_saldo(1, 4, 1, 1, 2, 'datin', 'tif');
+      await data_out_saldo(1, 4, 4, 1, 2, 'datin', 'area');
+      await data_out_saldo(1, 4, 4, 2, 2, 'datin', 'jateng');
+      await data_out_saldo(1, 4, 4, 3, 2, 'datin', 'jatim');
+      await data_out_saldo(1, 4, 4, 4, 2, 'datin', 'bali');
+
+      await data_out_saldo(1, 4, 1, 1, 5, 'hsi', 'tif');
+      await data_out_saldo(1, 4, 4, 1, 5, 'hsi', 'area');
+      await data_out_saldo(1, 4, 4, 2, 5, 'hsi', 'jateng');
+      await data_out_saldo(1, 4, 4, 3, 5, 'hsi', 'jatim');
+      await data_out_saldo(1, 4, 4, 4, 5, 'hsi', 'bali');
     }
 
-    // await unspec_datin();
-    // await q_hsi();
-    // await sqm_datin();
-    // await ttr();
-    // await q_datin();
+    await unspec_datin();
+    await q_hsi();
+    await sqm_datin();
+    await ttr();
+    await q_datin();
     await outstanding_saldo_datin();
   } catch (error) {
     console.error('Terjadi kesalahan:', error.message);
   } finally {
-    // await browser.close();
+    await browser.close();
   }
 })();
