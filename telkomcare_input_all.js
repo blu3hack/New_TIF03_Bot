@@ -3,7 +3,8 @@ const { insertDate } = require('./currentDate');
 
 // ================= DELETE DATA =================
 async function deleteExistingData() {
-  const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller', 'ttr_siptrunk'];
+  // const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller', 'ttr_siptrunk'];
+  const tableForDelete = ['hsi_sugar'];
   const jenisForDelete = ['balnus_ccm', 'jateng_ccm', 'jatim_ccm', 'area_ccm'];
   const inPlaceholders = jenisForDelete.map(() => '?').join(',');
 
@@ -112,38 +113,59 @@ async function sugar_datin() {
 // ================= SUGAR HSI =================
 async function sugar_hsi() {
   const sql = `
-    INSERT INTO hsi_sugar (jenis, treg, tgl, \`real\`)
-    SELECT
-      rsb.area AS jenis,
-      rcm.branch AS treg,
-      ? AS tgl,
-      ROUND(
-        ( NULLIF(COUNT(htd.INCIDENT),0) - COUNT(CASE WHEN htd.COMPLIANCE = 'COMPLY' THEN 1 END) ) / NULLIF(COUNT(htd.INCIDENT),0) * 100
-      ,2)
-    FROM region_ccm rcm
-    LEFT JOIN region_sub_branch rsb ON rcm.branch = rsb.lokasi
-    LEFT JOIN helper_sugar_hsi htd ON htd.WORKZONE = rcm.sto
-    GROUP BY rcm.branch, rsb.area
+    INSERT INTO hsi_sugar (jenis, treg, tgl, \`real\`) -- Letakkan INSERT di sini
+    WITH sugar_hsi AS (
+      SELECT
+        r.branch,
+        COUNT(DISTINCT CASE WHEN cnt.total > 1 THEN h.SERVICE_ID END) AS gaul,
+        COUNT(DISTINCT h.SERVICE_ID) AS total
+      FROM helper_sugar_hsi h
+      JOIN region_ccm r ON h.WORKZONE = r.sto
+      JOIN (
+        SELECT SERVICE_ID, COUNT(*) AS total 
+        FROM helper_sugar_hsi 
+        WHERE SERVICE_ID IS NOT NULL 
+        GROUP BY SERVICE_ID
+      ) cnt ON h.SERVICE_ID = cnt.SERVICE_ID
+      GROUP BY r.branch
+    ),
 
-    UNION ALL
+    final_aggregation AS (
+      SELECT
+        rsb.area,
+        rsb.lokasi AS treg,
+        CASE 
+          WHEN rsb.lokasi = 'BALI NUSRA' THEN 
+            (SELECT SUM(gaul) FROM sugar_hsi WHERE branch IN ('DENPASAR', 'MATARAM', 'KUPANG', 'FLORES'))
+          WHEN rsb.lokasi = 'JAWA TIMUR' THEN 
+            (SELECT SUM(gaul) FROM sugar_hsi WHERE branch IN ('SURABAYA', 'JEMBER', 'LAMONGAN', 'MADIUN', 'MALANG', 'SIDOARJO'))
+          WHEN rsb.lokasi = 'JATENG DIY' THEN 
+            (SELECT SUM(gaul) FROM sugar_hsi WHERE branch IN ('MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SURAKARTA', 'YOGYAKARTA'))
+          ELSE sh.gaul 
+        END AS final_gaul,
+        
+        CASE 
+          WHEN rsb.lokasi = 'BALI NUSRA' THEN 
+            (SELECT SUM(total) FROM sugar_hsi WHERE branch IN ('DENPASAR', 'MATARAM', 'KUPANG', 'FLORES'))
+          WHEN rsb.lokasi = 'JAWA TIMUR' THEN 
+            (SELECT SUM(total) FROM sugar_hsi WHERE branch IN ('SURABAYA', 'JEMBER', 'LAMONGAN', 'MADIUN', 'MALANG', 'SIDOARJO'))
+          WHEN rsb.lokasi = 'JATENG DIY' THEN 
+            (SELECT SUM(total) FROM sugar_hsi WHERE branch IN ('MAGELANG', 'PEKALONGAN', 'PURWOKERTO', 'SEMARANG', 'SURAKARTA', 'YOGYAKARTA'))
+          ELSE sh.total 
+        END AS final_total
+      FROM region_sub_branch rsb
+      LEFT JOIN sugar_hsi sh ON sh.branch = rsb.lokasi
+    )
 
     SELECT
-      'area_ccm' AS jenis,
-      rcm.region AS treg,
-      ? AS tgl,
-      ROUND(
-        (NULLIF(COUNT(htd.INCIDENT), 0) - COUNT(CASE WHEN htd.COMPLIANCE = 'COMPLY' THEN 1 END)) / NULLIF(COUNT(htd.INCIDENT), 0) * 100,
-        2
-      )
-    FROM
-      region_ccm rcm
-      LEFT JOIN region_sub_branch rsb ON rcm.branch = rsb.lokasi
-      LEFT JOIN helper_sugar_hsi htd ON htd.WORKZONE = rcm.sto
-    GROUP BY
-      rcm.region
+      area,
+      treg,
+      ?,
+      100 - ROUND(CAST(final_gaul AS FLOAT) / NULLIF(final_total, 0) * 100, 2)
+    FROM final_aggregation;
   `;
 
-  await connection.execute(sql, [insertDate, insertDate]);
+  await connection.execute(sql, [insertDate]);
   console.log('✅ Insert ke sugar_hsi berhasil');
 }
 
@@ -317,12 +339,12 @@ async function ttr_siptrunk() {
 async function main() {
   try {
     await deleteExistingData();
-    await ttr_datin();
-    await sugar_datin();
+    // await ttr_datin();
+    // await sugar_datin();
     await sugar_hsi();
-    await ttr_indibiz();
-    await ttr_reseller();
-    await ttr_siptrunk();
+    // await ttr_indibiz();
+    // await ttr_reseller();
+    // await ttr_siptrunk();
   } catch (err) {
     console.error('❌ Error:', err);
   } finally {
