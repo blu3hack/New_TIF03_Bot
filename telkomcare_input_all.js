@@ -3,8 +3,8 @@ const { insertDate } = require('./currentDate');
 
 // ================= DELETE DATA =================
 async function deleteExistingData() {
-  // const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller', 'ttr_siptrunk'];
-  const tableForDelete = ['hsi_sugar'];
+  const tableForDelete = ['ttr_datin', 'sugar_datin', 'hsi_sugar', 'ttr_indibiz', 'ttr_reseller', 'ttr_siptrunk'];
+  // const tableForDelete = ['hsi_sugar'];
   const jenisForDelete = ['balnus_ccm', 'jateng_ccm', 'jatim_ccm', 'area_ccm'];
   const inPlaceholders = jenisForDelete.map(() => '?').join(',');
 
@@ -339,12 +339,12 @@ async function ttr_siptrunk() {
 async function main() {
   try {
     await deleteExistingData();
-    // await ttr_datin();
-    // await sugar_datin();
+    await ttr_datin();
+    await sugar_datin();
     await sugar_hsi();
-    // await ttr_indibiz();
-    // await ttr_reseller();
-    // await ttr_siptrunk();
+    await ttr_indibiz();
+    await ttr_reseller();
+    await ttr_siptrunk();
   } catch (err) {
     console.error('❌ Error:', err);
   } finally {
