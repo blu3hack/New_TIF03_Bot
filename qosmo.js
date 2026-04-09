@@ -159,8 +159,6 @@ const { exec } = require('child_process');
     }
   }
 
-  // ... (Bagian atas kode Anda sudah benar)
-
   // Bagian pemanggilan fungsi dengan penanganan refresh/stabilitas
   const filters = [
     { key: 'PACKETLOSS', file: 'packetloss_kurang_lima' },
@@ -192,7 +190,5 @@ const { exec } = require('child_process');
   }
 
   console.log('Semua proses selesai.');
-  // await browser.close();
-
   // await browser.close();
 })();

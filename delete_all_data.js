@@ -16,7 +16,7 @@ async function clearFolder(folderPath) {
 
 async function main() {
   const baseDir = path.join(__dirname, 'loaded_file');
-  const folders = ['asr_wifi', 'asr_datin', 'wsa', 'wsa_gamas', 'download_fulfillment', 'ff_non_hsi', 'wifi_revi', 'cnop', 'ps_re', 'msa_upload', 'unspec_datin', 'service_sugar', 'mttr_mso', 'valdat'];
+  const folders = ['asr_wifi', 'asr_datin', 'wsa', 'wsa_gamas', 'download_fulfillment', 'ff_non_hsi', 'wifi_revi', 'cnop', 'ps_re', 'msa_upload', 'unspec_datin', 'service_sugar', 'mttr_mso', 'valdat', 'qosmo'];
   for (const folder of folders) {
     const fullPath = path.join(baseDir, folder);
     await clearFolder(fullPath);
